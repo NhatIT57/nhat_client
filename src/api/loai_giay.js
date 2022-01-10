@@ -51,6 +51,10 @@ export const getLoaiGiay = () => {
     return authAxios.get(`/api/loai_giay`);
 };
 
+export const getLoaiGiayTC = () => {
+    return authAxios.get(`/api/loai_giay/getTC`);
+};
+
 export const updateLoaiGiay = (data) => {
     return authAxios.patch(`/api/loai_giay`, data);
 };

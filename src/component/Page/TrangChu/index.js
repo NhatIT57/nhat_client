@@ -9,8 +9,9 @@ import { connect } from "react-redux";
 import * as actionLoaiGiay from "./../../../actions/loai_giay";
 import * as actionGiay from "./../../../actions/giay";
 import * as apiGiay from "./../../../api/giay";
+import * as apiLoaiGiay from "./../../../api/loai_giay";
 import * as apiImage from "./../../../contants/index";
-import Loadding from './../../../loadding/index';
+import Loadding from "./../../../loadding/index";
 
 function TrangChu(props) {
   const {
@@ -22,12 +23,12 @@ function TrangChu(props) {
     mausacNP,
   } = props;
 
-  const [isLoading, setIsLoadding] =  useState(false);
+  const [isLoading, setIsLoadding] = useState(false);
   const { setDataByLG, fetchListNewProductRequest, fetchListGiayRequest } =
     createActionNP;
   const { fetchListLoaiGiayRequest } = CreateActionLoaiGiay;
   const [dataLGS, setDataLGS] = useState([]);
-
+  const [dataLG, setDataLg] = useState([]);
   useEffect(() => {
     let current = true;
     setIsLoadding(true);
@@ -36,7 +37,6 @@ function TrangChu(props) {
         await fetchListNewProductRequest();
         await fetchListLoaiGiayRequest();
         await fetchListGiayRequest();
-       
         await apiGiay.getProductLG().then((res) => {
           const { data } = res;
           if (res.status === 200) {
@@ -44,6 +44,7 @@ function TrangChu(props) {
             setIsLoadding(false);
           }
         });
+      
       }
       await fetchPostsList();
     })();
@@ -63,69 +64,97 @@ function TrangChu(props) {
   }, [ListLoaiGiay]);
 
 
-  function renderContent(){
-    if(isLoading) {
-      return <div className="isLoading"><Loadding type={`bubbles`} color={`#333`}></Loadding></div>
-    }else{
-      return <div className="homePage">
-      <div className="container">
-        <div className="newProduct">
-          <div className="title-newProdcut">
-            <Link to="/SanPhamMoi" className="title-hp">
-              Sản Phẩm mới
-            </Link>
-          </div>
-          <OwlCarousel items={3} className="owl-theme" loop nav margin={8}>
-            {giayNP.length > 0 ? (
-              giayNP.map((item, index) => {
-                const data = mausacNP.filter((i) => i.id_giay === item.id);
-                const d = data[0].hinh_anh.split(",");
-                let arr = [];
-                for (var i = 0; i < d.length; i++) {
-                  arr.push(d[i]);
-                }
-                return (
-                  <Link
-                    key={item.id}
-                    to={`/XemSamPham/${item.id}`}
-                    className="title-hp"
-                  >
-                    <div className="one-procut">
-                      <div className="width-image">
-                        <img
-                          className="img"
-                          src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
-                        />
-                      </div>
+  function onChangeCheckBox(e){
+    
+  }
 
-                      <div className="name-price">
-                        <div className="name-product">{data[0].ten_giay}</div>
-                        <div className="price-product">
-                          {`${data[0].gia_ban
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })
-            ) : (
-              <div></div>
-            )}
-          </OwlCarousel>
-
-          <div className="center-button">
-            <Link
-              to="/SanPhamMoi"
-              title="Xem tất cả  SẢN PHẨM MỚI "
-              className="evo-button mobile-viewmore"
-            >
-              Xem tất cả . <strong>SẢN PHẨM MỚI</strong>
-            </Link>
-          </div>
+  function renderContent() {
+    if (isLoading) {
+      return (
+        <div className="isLoading">
+          <Loadding type={`bubbles`} color={`#333`}></Loadding>
         </div>
-        <div className="th-prodcut mt-5">
+      );
+    } else {
+      return (
+        <div className="homePage">
+          <div className="container">
+            <div className="newProduct">
+              <div className="title-newProdcut">
+                <Link to="/SanPhamMoi" className="title-hp">
+                  Sản Phẩm mới
+                </Link>
+              </div>
+              <OwlCarousel items={3} className="owl-theme" loop nav margin={8}>
+                {giayNP.length > 0 ? (
+                  giayNP.map((item, index) => {
+                    const data = mausacNP.filter((i) => i.id_giay === item.id);
+                    const d = data[0].hinh_anh.split(",");
+                    let arr = [];
+                    for (var i = 0; i < d.length; i++) {
+                      arr.push(d[i]);
+                    }
+                    return (
+                      <Link
+                        key={item.id}
+                        to={`/XemSamPham/${item.id}`}
+                        className="title-hp"
+                      >
+                        <div className="one-procut">
+                          <div className="width-image">
+                            <img
+                              className="img"
+                              src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
+                            />
+                          </div>
+
+                          <div className="name-price">
+                            <div className="name-product">
+                              {data[0].ten_giay}
+                            </div>
+                            <div className="price-product">
+                              {`${data[0].gia_ban
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })
+                ) : (
+                  <div></div>
+                )}
+              </OwlCarousel>
+
+              <div className="center-button">
+                <Link
+                  to="/SanPhamMoi"
+                  title="Xem tất cả  SẢN PHẨM MỚI "
+                  className="evo-button mobile-viewmore"
+                >
+                  Xem tất cả . <strong>SẢN PHẨM MỚI</strong>
+                </Link>
+              </div>
+            </div>
+            {/* <div className="row">
+              <div className="col-sm-4">
+                <div className="fs4 fw-bold">Thương hiệu</div>
+                <div className="checkbox">
+                  <ol className="items am-filter-items-attr_brand_id mt-2">
+                   {dataLG.length>0?dataLG.map((item, index)=>{
+                     return  <li>
+                     <a href="" className="d-flex align-items-center">
+                         <input type="checkbox" className="mr-2" onChange={onChangeCheckBox}/>
+                         <div>{`${item.ten_loai_giay} (${item.so_luong})`}</div>
+                     </a>
+                   </li>
+                   }):null}
+                    </ol>
+                </div>
+              </div>
+            </div> */}
+            <div className="th-prodcut mt-5">
           {ListLoaiGiay.length > 0 &&
           dataLGS.length > 0 &&
           ListGiay.length > 0 ? (
@@ -248,8 +277,9 @@ function TrangChu(props) {
             <div></div>
           )}
         </div>
-      </div>
-    </div>
+          </div>
+        </div>
+      );
     }
   }
   return renderContent();

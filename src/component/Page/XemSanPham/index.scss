@@ -165,4 +165,10 @@ input:checked+label .img-check {
     .xem_san_pham {
         margin-top: 50px;
     }
+    .owl-carousel .owl-item img {
+        width: 100px !important;
+        height:  100px !important;
+        padding: 0 5px !important;
+        object-fit: contain;
+    }
 }

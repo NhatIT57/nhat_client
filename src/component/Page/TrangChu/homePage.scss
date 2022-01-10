@@ -151,7 +151,14 @@
 .owl-carousel .owl-item img {
     width: 224.66px !important;
     height:  224.66px !important;
+    padding: 0 35px !important;
     object-fit: contain;
+}
+
+.items {
+    margin: 0;
+    padding: 0;
+    list-style: none none;
 }
 
 
@@ -162,6 +169,13 @@
     .homePage {
         margin-top: 30px;
     }
+    .owl-carousel .owl-item img {
+        width: 100px !important;
+        height:  100px !important;
+        padding: 0 5px !important;
+        object-fit: contain;
+    }
+    
 }
 
 @media screen and (min-width: 740px)and(max-width: 1040px) {

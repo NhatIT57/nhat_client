@@ -14,6 +14,7 @@ function ModalProduct(props) {
 	useEffect(() => {
 		setData(token);
 	}, [token]);
+	
 	function hidaModals() {
 		hideModal();
 	}

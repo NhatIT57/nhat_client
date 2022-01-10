@@ -13,6 +13,7 @@ import * as apiDH from "./../../../api/dat_hang";
 import * as apiCDH from "./../../../api/ct_don_hang";
 import * as apiCTS from "./../../../api/chi_tiet_size";
 import { useHistory } from "react-router-dom";
+import * as notify from '../../../contants/notifycation';
 
 function DatHang(props) {
   const history = useHistory();
@@ -32,6 +33,7 @@ function DatHang(props) {
         if (response.status === 200) {
           var id = response.data.data.insertId;
           apiDH.notifyDat_hang({ id: response.data.data.insertId });
+          notify.notificatonSuccess('Bạn đã đặt hàng thành công');
           token.map((i, index) => {
             var tam = dataSize;
             apiCDH
