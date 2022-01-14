@@ -26,6 +26,10 @@ export const getFBID = (data) => {
     return authAxios.post(`/api/khach_hang/getFBID`, data);
 };
 
+export const getByID = (data) => {
+    return authAxios.post(`/api/khach_hang/getByID`, data);
+};
+
 export const loginFB = (data) => {
     return authAxios.post(`/api/khach_hang/loginFB`, data);
 };
@@ -39,7 +43,7 @@ export const getList = () => {
 };
 
 export const update = (data) => {
-    return authAxios.patch(`/api/khach_hang`, data);
+    return authAxios.post(`/api/khach_hang/update`, data);
 };
 
 export const deletekhach_hang = (data) => {

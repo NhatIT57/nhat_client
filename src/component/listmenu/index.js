@@ -37,7 +37,11 @@ function DashBoard(props) {
         await fetchListNewProductRequest();
         await fetchListChiTietMauSacRequest();
         await fetchListChiTietSizeRequest();
-        setTokenPro(localStorage.getItem("product")? JSON.parse(localStorage.getItem("product")):[])
+        setTokenPro(
+          localStorage.getItem("product")
+            ? JSON.parse(localStorage.getItem("product"))
+            : []
+        );
         const tokenss = localStorage.getItem("tokenTC");
         if (tokenss) {
           try {
@@ -58,7 +62,6 @@ function DashBoard(props) {
     return () => (current = false);
   }, []);
 
- 
   useEffect(() => {
     let current = true;
     (async () => {
@@ -119,14 +122,13 @@ function DashBoard(props) {
     setTokens(null);
   }
 
-  function showModals() { const tokenss = localStorage.getItem("tokenTC");
-  if(tokenss){
-    showModal();
-  }else{
-    history.push('/DangNhap');
-  }
-
-    
+  function showModals() {
+    const tokenss = localStorage.getItem("tokenTC");
+    if (tokenss) {
+      showModal();
+    } else {
+      history.push("/DangNhap");
+    }
   }
   return (
     <div key={name} className="chia">
@@ -169,6 +171,13 @@ function DashBoard(props) {
                     </Link>
                   )}
                 </li>
+                {tokens !== null ? (
+                  <li>
+                    <a href="/DoiMatKhau" title="Đổi mật khẩu" >
+                    Đổi mật khẩu
+                    </a>  
+                  </li>
+                ) : null}
               </ul>
             </div>
             <div

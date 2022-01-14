@@ -14,7 +14,8 @@ import XemSanPham from "./../component/Page/XemSanPham/index";
 import DatHang from "./../component/Page/Dathang/index";
 import GioiThieu from "./../component/Page/GioiThieu/index";
 import LienHe from "./../component/Page/LienHe/index";
-
+import DoiMatKhau from './../component/Page/DoiMatKhau/index'
+import QuenMatKhau from './../component/Page/QuenMatKhau/index'
 
 import Search from "./../component/Page/Search/index";
 
@@ -39,39 +40,48 @@ export const ROUTESSTC = [{
     },
     {
         path: "/ThuongHieu=:th",
-
         exact: false,
         component: ThuongHieuTC,
     },
     {
         path: "/SanPhamMoi/SortBy=:SortBy&&GroupBy=:GroupBy&&Page=:page",
-
         exact: false,
         component: SanPhamMoi,
     },
     {
         path: "/SanPhamMoi",
-
         exact: false,
         component: SanPhamMoi,
     },
     {
         path: "/GioiThieu",
-
         exact: false,
         component: GioiThieu,
     },
     {
         path: "/DangKy",
-
         exact: false,
         component: TaiKhoan,
     },
     {
         path: "/DangNhap",
-
         exact: false,
         component: DangNhap,
+    },
+    {
+        path: "/DoiMatKhau",
+        exact: false,
+        component: DoiMatKhau,
+    },
+    {
+        path: "/QuenMatKhau/id=:id",
+        exact: false,
+        component: QuenMatKhau,
+    },
+    {
+        path: "/QuenMatKhau",
+        exact: false,
+        component: QuenMatKhau,
     },
     {
         path: "/HuongDanMuaHang",
