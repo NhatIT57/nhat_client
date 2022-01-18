@@ -27,7 +27,7 @@ function DangNhap(props) {
           } else {
             // notify.notificatonSuccess("Đăng nhập thành công");
             let dataStemp = response.data.data;
-			dataStemp.password = data.passwords;
+			      dataStemp.password = data.passwords;
             api
               .update(dataStemp)
               .then((response) => {

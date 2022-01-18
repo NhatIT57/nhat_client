@@ -4,6 +4,7 @@ const token = JSON.parse(localStorage.getItem("token"));
 var url_upload = "api/upload";
 var URL = "http://localhost:8080";
 var URLS = "http://localhost:8080";
+var URL_THANHTOAN = "http://localhost:8888";
 var url_them_dat_hang = "api/dat_hang";
 // var url_get_loia_giay = ''
 const authAxios = axios.create({
@@ -18,7 +19,14 @@ const authAxios = axios.create({
 const authAxioss = axios.create({
     baseURL: URLS,
     headers: {
-        Authorization: `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    },
+});
+
+const authAxiosTT = axios.create({
+    baseURL: URL_THANHTOAN,
+    headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     },
@@ -45,9 +53,29 @@ export const getList = () => {
     return authAxios.get(`/api/dat_hang`);
 };
 
+
+export const getThanhToan = (data) => {
+    return authAxiosTT.get(`/order/create_payment_url`, data);
+};
+
+
+export const getDonHangByID = (data) => {
+    return authAxios.post(`/api/dat_hang/getDonHangByID`, data);
+};
+
+
+export const getTinhThanh = () => {
+    return authAxios.get(`/api/dat_hang/getTinhThanh`);
+};
+
 export const update = (data) => {
     return authAxios.patch(`/api/dat_hang`, data);
 };
+
+export const getGiayByID = (data) => {
+    return authAxios.post(`/api/dat_hang/getGiayByID`, data);
+};
+
 
 export const deleteDat_hang = (data) => {
     return authAxios.post(`/api/dat_hang/delete`, data);

@@ -13,63 +13,131 @@ import * as apiDH from "./../../../api/dat_hang";
 import * as apiCDH from "./../../../api/ct_don_hang";
 import * as apiCTS from "./../../../api/chi_tiet_size";
 import { useHistory } from "react-router-dom";
-import * as notify from '../../../contants/notifycation';
-
+import * as notify from "../../../contants/notifycation";
+import * as apiSend from "../../../api/sent_mail";
 function DatHang(props) {
   const history = useHistory();
-  const { onChangeInput, handleSubmit, data, setData, errors } = useform(
-    submit,
-    validate
-  );
-  const { token, CreateModal } = props;
-  const { setterToken } = CreateModal;
+  const { onChangeInput, handleSubmit, data, setData, errors, setErrors } =
+    useform(submit, validate);
+  // const { token, CreateModal } = props;
+  // const { setterToken } = CreateModal;
+  const [token, setToken] = useState([]);
   const [dataSize, setDataSize] = useState([]);
+  const [tinh, setTinh] = useState([]);
+  const [tong, setTong] = useState(0);
+  const [valueRadio, setValueRadio] = useState(true);
   var t = 0;
 
   async function submit() {
+   if(valueRadio){
     await apiDH
-      .Them(data)
+    .Them(data)
+    .then((response) => {
+      if (response.status === 200) {
+        var id = response.data.data.insertId;
+        apiDH.notifyDat_hang({ id: response.data.data.insertId });
+        notify.notificatonSuccess("Bạn đã đặt hàng thành công");
+        apiSend
+          .sendMail({
+            to: data.email,
+            subject: `Bạn về đặt một đơn hàng mã đơn hàng là: ${id}`,
+            body: `<div><div><p>Bấm vào link bên dưới để xem chi tiết đơn hàng: <a href=http://localhost:3000/XemDonHang/id=${id}>Link</a></p></div></div>`,
+          })
+          .then((response) => {
+            if (response.status === 200) {
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        token.map((i, index) => {
+          var tam = dataSize;
+          apiCDH
+            .Them({
+              id_giay: i.id_giay,
+              id_dat_hang: id,
+              so_luong: i.soluong,
+              tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
+              id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
+            })
+            .then((response) => {
+              if (response.status === 200) {
+                var sl =
+                  parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
+                apiCTS
+                  .update({
+                    id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
+                    id_size: dataSize[index].id_size,
+                    so_luong: sl,
+                  })
+                  .then((response) => {
+                    if (response.status === 200) {
+                      localStorage.removeItem("product");
+                      // setterToken([]);
+                      history.push("/");
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+   }else{
+     apiDH.getThanhToan(data).then((rsp)=>{
+      window.location.href = `http://localhost:8888/order/create_payment_url`
+     })
+   }
+  }
+
+  async function onchangeSelect(e) {
+    e.persist();
+    var stemp = data;
+    await setData((data) => ({
+      ...data,
+      matp: e.target.value,
+    }));
+    stemp.matp = e.target.value;
+    const stempData = tinh.filter((item) => item.matp === e.target.value);
+    if (stempData.length > 0) {
+      await setData((data) => ({
+        ...data,
+        ship: stempData[0].ship,
+        tong_tien: tong - stempData[0].ship,
+      }));
+    }
+    await setErrors(validate(stemp));
+  }
+
+  useEffect(() => {
+    const product = JSON.parse(localStorage.getItem("product"));
+    setToken(product);
+    var stemp = 0;
+    product.map((item) => {
+      stemp += item.soluong * item.gia_ban;
+    });
+    setData((data) => ({
+      ...data,
+      tong_tien: stemp,
+    }));
+    setTong(stemp);
+    getTinhThanh();
+  }, []);
+
+  async function getTinhThanh() {
+    await await apiDH
+      .getTinhThanh(data)
       .then((response) => {
         if (response.status === 200) {
-          var id = response.data.data.insertId;
-          apiDH.notifyDat_hang({ id: response.data.data.insertId });
-          notify.notificatonSuccess('Bạn đã đặt hàng thành công');
-          token.map((i, index) => {
-            var tam = dataSize;
-            apiCDH
-              .Them({
-                id_giay: i.id_giay,
-                id_dat_hang: id,
-                so_luong: i.soluong,
-                tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
-                id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
-              })
-              .then((response) => {
-                if (response.status === 200) {
-                  var sl =
-                    parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
-                  apiCTS
-                    .update({
-                      id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
-                      id_size: dataSize[index].id_size,
-                      so_luong: sl,
-                    })
-                    .then((response) => {
-                      if (response.status === 200) {
-                        localStorage.removeItem("product");
-                        setterToken([]);
-                        history.push("/");
-                      }
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          });
+          setTinh(response.data.data);
         }
       })
       .catch((error) => {
@@ -92,7 +160,6 @@ function DatHang(props) {
       } catch (err) {
         // err
       }
-
       token.map((i) => {
         var d = dataSize;
         apiSize
@@ -102,7 +169,6 @@ function DatHang(props) {
             id_size: i.id_size,
           })
           .then((response) => {
-            console.log(response);
             if (response.data.success === 1) {
               if (response.data) {
                 d.push(response.data.data[0]);
@@ -118,12 +184,16 @@ function DatHang(props) {
     }
   }, [token]);
 
+  function handleChange(e, isBoolean) {
+    setValueRadio(isBoolean);
+  }
+
   if (token) {
     return (
       <div className="dathang">
         <div className="modal-all">
           <div className="container">
-            <div className="modal-add__header">GIỎ HÀNG CỦA BẠN </div>
+            <div className="modal-add__header">Sản phẩm </div>
             <div className="modal-table">
               <div className="row">
                 <div className="col-md-6 col-xs-12">
@@ -143,7 +213,6 @@ function DatHang(props) {
             {token ? (
               token.map((i, index) => {
                 t += i.soluong * i.gia_ban;
-
                 return (
                   <div key={index + 1} className="modal-list">
                     <div className="row">
@@ -158,10 +227,6 @@ function DatHang(props) {
                           <div className="productGH">
                             <div className="productGH-name">{i.ten_giay}</div>
                             <div className="productGH-fast">{`${i.ten_mau_sac}/${i.ten_size}`}</div>
-                            <div className="productGH-delete">
-                              <i className="fa fa-times" aria-hidden="true"></i>
-                              <span>Bỏ sản phẩm này</span>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -192,12 +257,41 @@ function DatHang(props) {
               <div></div>
             )}
             <div className="hr"></div>
+            <div className="mt-2">{`Phí vận chuyển: ${data.ship}`}</div>
+            <div>{`Tổng tiền: ${data.tong_tien}`}</div>
+            <div className="hr"></div>
           </div>
         </div>
 
         <div className="thkh">
-          <div className="container">
-            <div className="main-header">Thông tin nhận hàng</div>
+          <div className="container mt-2">
+            <div><div className="main-header">Hình thúc thanh toán</div>
+            <div className="radio-buttons d-flex">
+                  <div className="mr-2 thanhtoan">
+                    <input
+                      className="thanhtoan"
+                      value="thanhtoan"
+                      name="thanhtoan"
+                      type="radio"
+                      onChange={(e)=>handleChange(e,true)}
+                      checked={valueRadio === true ? true : false}
+                    />
+                      Thanh toán khi nhận hàng
+                  </div>
+                  <div className="mr-2 thanhtoan">
+                    <input
+                      className="thanhtoan"
+                      value="vnp"
+                      name="vnp"
+                      type="radio"
+                      onChange={(e)=>handleChange(e,false)}
+                      checked={valueRadio === false ? true : false}
+                    />
+                    Thanh toán VNPAY
+                  </div>
+                </div>
+            </div>
+            <div className="main-header mt-3">Thông tin nhận hàng</div>
             <div className="main-form">
               <div className="row">
                 <form action="" onSubmit={handleSubmit}>
@@ -235,7 +329,26 @@ function DatHang(props) {
                       <p className="error"> {errors.sdt_nguoi_nhan} </p>
                     )}
                   </div>
-                  <div className="col-sm-12">
+                  <div className="col-sm-12 mt-2">
+                    <select
+                      onChange={onchangeSelect}
+                      className="form-control border border-dark"
+                      value={data.matp}
+                    >
+                      <option value="">Chọn tỉnh thành</option>
+                      {tinh.map((l, index) => {
+                        return (
+                          <option key={l.matp} value={l.matp}>
+                            {l.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    {errors.matp && (
+                      <p className="error mt-2"> {errors.matp} </p>
+                    )}
+                  </div>
+                  <div className="col-sm-12 mt-2">
                     <input
                       type="text"
                       value={data.dia_chi_nguoi_nhan}

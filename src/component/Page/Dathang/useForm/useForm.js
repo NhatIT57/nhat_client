@@ -11,8 +11,12 @@ const useForm = (callback, validate) => {
         sdt_nguoi_nhan: "",
         dia_chi_nguoi_nhan: "",
         email: "",
+        matp: '',
+        ship: 0,
+        tong_tien: 0,
         date_create: "",
     });
+    
 
     function onChangeInput(e) {
         e.persist();
@@ -63,6 +67,7 @@ const useForm = (callback, validate) => {
         data,
         setData,
         errors,
+        setErrors
     };
 };
 

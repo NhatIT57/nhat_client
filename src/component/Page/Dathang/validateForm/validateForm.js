@@ -4,13 +4,15 @@ export default function validateInfo(values, data) {
     if (!values.ten_nguoi_nhan) {
         errors.ten_nguoi_nhan = 'Không được để trống';
     }
-
     if (!values.email) {
         errors.email = 'Không được để trống';
     } else if (!validator.isEmail(values.email)) {
         errors.email = 'Bạn hãy kiểm tra lại email';
     } else if (values.email === data) {
         errors.email = 'Email đã được sử dụng';
+    }
+    if (!values.matp) {
+        errors.matp = 'Vui lòng chọn tỉnh thành';
     }
     if (!values.dia_chi_nguoi_nhan) {
         errors.dia_chi_nguoi_nhan = 'Không được để trống';

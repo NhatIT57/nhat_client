@@ -6,7 +6,11 @@ import * as ActionModal from './../../actions/modal';
 import * as apiImage from './../../contants/index';
 import { Link } from 'react-router-dom';
 // import * as apiDatHang from './../../api/dat_hang';
+import * as notify from "../../contants/notifycation";
+import { useHistory } from 'react-router-dom';
+
 function ModalProduct(props) {
+	const history = useHistory();
 	const { showmodal, CreateModal, token } = props;
 	const { hideModal, setterToken } = CreateModal;
 	const [data, setData] = useState();
@@ -19,32 +23,61 @@ function ModalProduct(props) {
 		hideModal();
 	}
 
+
 	function onChangeSelectQuantity(id, e) {
 		e.persist();
 		const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
 		if (rx_live.test(e.target.value)) {
 			const i = data.findIndex((item) => item.id_giay === id);
 			const dataTamToken = data[i];
+			if(e.target.value !== ''){
+				if (parseInt(e.target.value) <= parseInt(dataTamToken.soluong_con)) {
+					if (i !== -1) {
+						dataTamToken.soluong = parseInt(e.target.value);
+						const newlist = [...data.slice(0, i), dataTamToken, ...data.slice(i + 1)];
+						setterToken(newlist);
+						localStorage.setItem('product', JSON.stringify(newlist));
+						setData(newlist);
+					}
+				} else {
+				  notify.notificatonWarning(
+					`Số lượng bạn có thể mua là: ${dataTamToken.soluong_con}`
+				  );
+				}
+			  }else{
+				if (i !== -1) {
+					const newlist = [...data.slice(0, i), dataTamToken, ...data.slice(i + 1)];
+					setterToken(newlist);
+					localStorage.setItem('product', JSON.stringify(newlist));
+					setData(newlist);
+				}
+			  }
 			dataTamToken.soluong = e.target.value;
-			if (i !== -1) {
-				const newlist = [...data.slice(0, i), dataTamToken, ...data.slice(i + 1)];
-				setterToken(newlist);
-				localStorage.setItem('product', JSON.stringify(newlist));
-				setData(newlist);
-			}
+			
 		}
 	}
 
 	function handleQuantity(id, d) {
 		const i = data.findIndex((item) => item.id_giay === id);
 		const dataTamToken = data[i];
-		dataTamToken.soluong =  parseInt(data[i].soluong) + d;
-		if (i !== -1) {
-			const newlist = [...data.slice(0, i), dataTamToken, ...data.slice(i + 1)];
-			setterToken(newlist);
-			localStorage.setItem('product', JSON.stringify(newlist));
-			setData(newlist);
-		}
+		if (
+			parseInt(d) + parseInt(dataTamToken.soluong) <=
+			  parseInt(dataTamToken.soluong_con) &&
+				parseInt(d) + parseInt(dataTamToken.soluong) > 0
+		  ) {
+			dataTamToken.soluong =  parseInt(data[i].soluong) + d;
+			if (i !== -1) {
+				const newlist = [...data.slice(0, i), dataTamToken, ...data.slice(i + 1)];
+				setterToken(newlist);
+				localStorage.setItem('product', JSON.stringify(newlist));
+				setData(newlist);
+			}
+		  } else {
+			notify.notificatonWarning(
+			  `Số lượng bạn có thể mua là: ${dataTamToken.soluong_con}`
+			);
+		  }
+		
 	}
 	function deleteProduct(id) {
 		const i = data.findIndex((item) => item.id_giay === id);
@@ -58,6 +91,24 @@ function ModalProduct(props) {
 	}
 
 	function submit() {}
+
+	function submitDatHang(){
+		let stemp = false;
+		data.map((item)=>{
+			if(item.soluong === ''){
+				stemp = true;
+			}
+		});
+		if(stemp===true){
+			notify.notificatonWarning(
+				`Hãy nhập số lượng bạn muốn mua`
+			  );
+		}else{
+			hidaModals();
+			history.push('/DatHang');
+		}
+		
+	}
 	return (
 		<div className={showmodal ? `product-modal` : `product-modal product-modal__block`}>
 			<form onSubmit={submit}>
@@ -170,10 +221,10 @@ function ModalProduct(props) {
 								</div>
 								<div className="btn-mua btnsold">
 									<Link
-										to="/DatHang"
+										// to="/DatHang"
 										className="btn btn-lg btn-gray btn-cart btn_buy add_to_cart"
 										// disabled="disabled"
-										onClick={hidaModals}
+										onClick={submitDatHang}
 									>
 										<span className="txt-main">Thanh toán</span>
 									</Link>

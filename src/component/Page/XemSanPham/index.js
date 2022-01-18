@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import * as ActionModal from "./../../../actions/modal";
 import { useHistory } from "react-router-dom";
 import jwt from "jsonwebtoken";
+import * as notify from "../../../contants/notifycation";
 
 function XemSanPham(props) {
   const { CreateModal } = props;
@@ -171,22 +172,44 @@ function XemSanPham(props) {
       soluong_con: data.soluong,
     }));
   }
+
   function handleQuantity(d) {
-    if (parseInt(d) + parseInt(dataSubmit.soluong) > 0) {
+    if (
+      parseInt(d) + parseInt(dataSubmit.soluong) <=
+        parseInt(dataSubmit.soluong_con) &&
+      parseInt(d) + parseInt(dataSubmit.soluong) > 0
+    ) {
       setDataSubmit((dataSubmit) => ({
         ...dataSubmit,
         soluong: parseInt(d) + parseInt(dataSubmit.soluong),
       }));
+    } else {
+      notify.notificatonWarning(
+        `Số lượng bạn có thể mua là: ${dataSubmit.soluong_con}`
+      );
     }
   }
   function onChangeSelectQuantity(e) {
     e.persist();
     const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
     if (rx_live.test(e.target.value)) {
-      setDataSubmit((dataSubmit) => ({
-        ...dataSubmit,
-        soluong: e.target.value,
-      }));
+      if(e.target.value !== ''){
+        if (parseInt(e.target.value) <= parseInt(dataSubmit.soluong_con)) {
+          setDataSubmit((dataSubmit) => ({
+            ...dataSubmit,
+            soluong: e.target.value,
+          }));
+        } else {
+          notify.notificatonWarning(
+            `Số lượng bạn có thể mua là: ${dataSubmit.soluong_con}`
+          );
+        }
+      }else{
+        setDataSubmit((dataSubmit) => ({
+          ...dataSubmit,
+          soluong: e.target.value,
+        }));
+      }
     }
   }
 
@@ -207,7 +230,8 @@ function XemSanPham(props) {
   }, [data, dataSubmit]);
 
   function showModals() {
-    const { setterToken } = CreateModal;
+    if(dataSubmit.soluong !== ''){
+      const { setterToken } = CreateModal;
     var token = localStorage.getItem("tokenTC");
     if (token) {
       const dd = JSON.parse(localStorage.getItem("product"));
@@ -251,6 +275,11 @@ function XemSanPham(props) {
       showModal();
     } else {
       history.push("/DangNhap");
+    }
+    }else{
+      notify.notificatonWarning(
+        `Hãy nhập số lượng bạn muốn mua`
+      );
     }
   }
   if (mausac.length > 0) {
@@ -299,7 +328,7 @@ function XemSanPham(props) {
                   </div>
                 </div>
                 <div className="watch-product__price mt-3">
-                  <div className="select-fast__modify">Số lượng còn:</div>
+                  <div className="select-fast__modify">Số lượng giới hạn:</div>
                   <span className="select-fast__modify ml-2">{`${dataSubmit.soluong_con}`}</span>
                 </div>
                 <div className="form_watch  mt-3">
@@ -443,339 +472,336 @@ function XemSanPham(props) {
             </div>
             <div className="mt-1">
               <div className="fs-3 fw-bold">QUY ĐỔI SIZE GIÀY NAM</div>
-             
-                <table
-                  className="mce-item-table"
-                 >
-                  <tbody>
-                    <tr>
-                      <td width="93">
-                        <p>
-                          <strong>
-                            <b>Centimet</b>
-                          </strong>
-                        </p>
-                      </td>
-                      <td width="77">
-                        <p>
-                          <strong>
-                            <b>Size US</b>
-                          </strong>
-                        </p>
-                      </td>
-                      <td width="81">
-                        <p>
-                          <strong>
-                            <b>Size VN</b>
-                          </strong>
-                        </p>
-                      </td>
-                      <td width="82">
-                        <p>
-                          <strong>
-                            <b>Size UK</b>
-                          </strong>
-                        </p>
-                      </td>
-                      <td width="87">
-                        <p>
-                          <strong>
-                            <b>Inches</b>
-                          </strong>
-                        </p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>23.5</p>
-                      </td>
-                      <td width="77">
-                        <p>6</p>
-                      </td>
-                      <td width="81">
-                        <p>39</p>
-                      </td>
-                      <td width="82">
-                        <p>5.5</p>
-                      </td>
-                      <td width="87">
-                        <p>9.25"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>24.1</p>
-                      </td>
-                      <td width="77">
-                        <p>6.5</p>
-                      </td>
-                      <td width="81">
-                        <p>39-40</p>
-                      </td>
-                      <td width="82">
-                        <p>6</p>
-                      </td>
-                      <td width="87">
-                        <p>9.5"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>24.4</p>
-                      </td>
-                      <td width="77">
-                        <p>7</p>
-                      </td>
-                      <td width="81">
-                        <p>40</p>
-                      </td>
-                      <td width="82">
-                        <p>6.5</p>
-                      </td>
-                      <td width="87">
-                        <p>9.625"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>24.8</p>
-                      </td>
-                      <td width="77">
-                        <p>7.5</p>
-                      </td>
-                      <td width="81">
-                        <p>40-41</p>
-                      </td>
-                      <td width="82">
-                        <p>7</p>
-                      </td>
-                      <td width="87">
-                        <p>9.75"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>25.4</p>
-                      </td>
-                      <td width="77">
-                        <p>8</p>
-                      </td>
-                      <td width="81">
-                        <p>41</p>
-                      </td>
-                      <td width="82">
-                        <p>7.5</p>
-                      </td>
-                      <td width="87">
-                        <p>9.9375"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>25.7</p>
-                      </td>
-                      <td width="77">
-                        <p>8.5</p>
-                      </td>
-                      <td width="81">
-                        <p>41-42</p>
-                      </td>
-                      <td width="82">
-                        <p>8</p>
-                      </td>
-                      <td width="87">
-                        <p>10.125"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>26</p>
-                      </td>
-                      <td width="77">
-                        <p>9</p>
-                      </td>
-                      <td width="81">
-                        <p>42</p>
-                      </td>
-                      <td width="82">
-                        <p>8.5</p>
-                      </td>
-                      <td width="87">
-                        <p>10.25"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>26.7</p>
-                      </td>
-                      <td width="77">
-                        <p>9.5</p>
-                      </td>
-                      <td width="81">
-                        <p>42-43</p>
-                      </td>
-                      <td width="82">
-                        <p>9</p>
-                      </td>
-                      <td width="87">
-                        <p>10.4375"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>27</p>
-                      </td>
-                      <td width="77">
-                        <p>10</p>
-                      </td>
-                      <td width="81">
-                        <p>43</p>
-                      </td>
-                      <td width="82">
-                        <p>9.5</p>
-                      </td>
-                      <td width="87">
-                        <p>10.5625"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>27.3</p>
-                      </td>
-                      <td width="77">
-                        <p>10.5</p>
-                      </td>
-                      <td width="81">
-                        <p>43-44</p>
-                      </td>
-                      <td width="82">
-                        <p>10</p>
-                      </td>
-                      <td width="87">
-                        <p>10.75"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>27.9</p>
-                      </td>
-                      <td width="77">
-                        <p>11</p>
-                      </td>
-                      <td width="81">
-                        <p>44</p>
-                      </td>
-                      <td width="82">
-                        <p>10.5</p>
-                      </td>
-                      <td width="87">
-                        <p>10.9375"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>28.3</p>
-                      </td>
-                      <td width="77">
-                        <p>11.5</p>
-                      </td>
-                      <td width="81">
-                        <p>44-45</p>
-                      </td>
-                      <td width="82">
-                        <p>11</p>
-                      </td>
-                      <td width="87">
-                        <p>11.125"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>28.6</p>
-                      </td>
-                      <td width="77">
-                        <p>12</p>
-                      </td>
-                      <td width="81">
-                        <p>45</p>
-                      </td>
-                      <td width="82">
-                        <p>11.5</p>
-                      </td>
-                      <td width="87">
-                        <p>11.25"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>29.4</p>
-                      </td>
-                      <td width="77">
-                        <p>13</p>
-                      </td>
-                      <td width="81">
-                        <p>46</p>
-                      </td>
-                      <td width="82">
-                        <p>12.5</p>
-                      </td>
-                      <td width="87">
-                        <p>11.5625"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>30.2</p>
-                      </td>
-                      <td width="77">
-                        <p>14</p>
-                      </td>
-                      <td width="81">
-                        <p>47</p>
-                      </td>
-                      <td width="82">
-                        <p>13.5</p>
-                      </td>
-                      <td width="87">
-                        <p>11.875"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>31</p>
-                      </td>
-                      <td width="77">
-                        <p>15</p>
-                      </td>
-                      <td width="81">
-                        <p>48</p>
-                      </td>
-                      <td width="82">
-                        <p>14.5</p>
-                      </td>
-                      <td width="87">
-                        <p>12.1875"</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td width="93">
-                        <p>31.8</p>
-                      </td>
-                      <td width="77">
-                        <p>16</p>
-                      </td>
-                      <td width="81">
-                        <p>49</p>
-                      </td>
-                      <td width="82">
-                        <p>15.5</p>
-                      </td>
-                      <td width="87">
-                        <p>12.5"</p>
-                      </td>
-                    </tr>
-                  </tbody>
-              
+
+              <table className="mce-item-table">
+                <tbody>
+                  <tr>
+                    <td width="93">
+                      <p>
+                        <strong>
+                          <b>Centimet</b>
+                        </strong>
+                      </p>
+                    </td>
+                    <td width="77">
+                      <p>
+                        <strong>
+                          <b>Size US</b>
+                        </strong>
+                      </p>
+                    </td>
+                    <td width="81">
+                      <p>
+                        <strong>
+                          <b>Size VN</b>
+                        </strong>
+                      </p>
+                    </td>
+                    <td width="82">
+                      <p>
+                        <strong>
+                          <b>Size UK</b>
+                        </strong>
+                      </p>
+                    </td>
+                    <td width="87">
+                      <p>
+                        <strong>
+                          <b>Inches</b>
+                        </strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>23.5</p>
+                    </td>
+                    <td width="77">
+                      <p>6</p>
+                    </td>
+                    <td width="81">
+                      <p>39</p>
+                    </td>
+                    <td width="82">
+                      <p>5.5</p>
+                    </td>
+                    <td width="87">
+                      <p>9.25"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>24.1</p>
+                    </td>
+                    <td width="77">
+                      <p>6.5</p>
+                    </td>
+                    <td width="81">
+                      <p>39-40</p>
+                    </td>
+                    <td width="82">
+                      <p>6</p>
+                    </td>
+                    <td width="87">
+                      <p>9.5"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>24.4</p>
+                    </td>
+                    <td width="77">
+                      <p>7</p>
+                    </td>
+                    <td width="81">
+                      <p>40</p>
+                    </td>
+                    <td width="82">
+                      <p>6.5</p>
+                    </td>
+                    <td width="87">
+                      <p>9.625"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>24.8</p>
+                    </td>
+                    <td width="77">
+                      <p>7.5</p>
+                    </td>
+                    <td width="81">
+                      <p>40-41</p>
+                    </td>
+                    <td width="82">
+                      <p>7</p>
+                    </td>
+                    <td width="87">
+                      <p>9.75"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>25.4</p>
+                    </td>
+                    <td width="77">
+                      <p>8</p>
+                    </td>
+                    <td width="81">
+                      <p>41</p>
+                    </td>
+                    <td width="82">
+                      <p>7.5</p>
+                    </td>
+                    <td width="87">
+                      <p>9.9375"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>25.7</p>
+                    </td>
+                    <td width="77">
+                      <p>8.5</p>
+                    </td>
+                    <td width="81">
+                      <p>41-42</p>
+                    </td>
+                    <td width="82">
+                      <p>8</p>
+                    </td>
+                    <td width="87">
+                      <p>10.125"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>26</p>
+                    </td>
+                    <td width="77">
+                      <p>9</p>
+                    </td>
+                    <td width="81">
+                      <p>42</p>
+                    </td>
+                    <td width="82">
+                      <p>8.5</p>
+                    </td>
+                    <td width="87">
+                      <p>10.25"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>26.7</p>
+                    </td>
+                    <td width="77">
+                      <p>9.5</p>
+                    </td>
+                    <td width="81">
+                      <p>42-43</p>
+                    </td>
+                    <td width="82">
+                      <p>9</p>
+                    </td>
+                    <td width="87">
+                      <p>10.4375"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>27</p>
+                    </td>
+                    <td width="77">
+                      <p>10</p>
+                    </td>
+                    <td width="81">
+                      <p>43</p>
+                    </td>
+                    <td width="82">
+                      <p>9.5</p>
+                    </td>
+                    <td width="87">
+                      <p>10.5625"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>27.3</p>
+                    </td>
+                    <td width="77">
+                      <p>10.5</p>
+                    </td>
+                    <td width="81">
+                      <p>43-44</p>
+                    </td>
+                    <td width="82">
+                      <p>10</p>
+                    </td>
+                    <td width="87">
+                      <p>10.75"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>27.9</p>
+                    </td>
+                    <td width="77">
+                      <p>11</p>
+                    </td>
+                    <td width="81">
+                      <p>44</p>
+                    </td>
+                    <td width="82">
+                      <p>10.5</p>
+                    </td>
+                    <td width="87">
+                      <p>10.9375"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>28.3</p>
+                    </td>
+                    <td width="77">
+                      <p>11.5</p>
+                    </td>
+                    <td width="81">
+                      <p>44-45</p>
+                    </td>
+                    <td width="82">
+                      <p>11</p>
+                    </td>
+                    <td width="87">
+                      <p>11.125"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>28.6</p>
+                    </td>
+                    <td width="77">
+                      <p>12</p>
+                    </td>
+                    <td width="81">
+                      <p>45</p>
+                    </td>
+                    <td width="82">
+                      <p>11.5</p>
+                    </td>
+                    <td width="87">
+                      <p>11.25"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>29.4</p>
+                    </td>
+                    <td width="77">
+                      <p>13</p>
+                    </td>
+                    <td width="81">
+                      <p>46</p>
+                    </td>
+                    <td width="82">
+                      <p>12.5</p>
+                    </td>
+                    <td width="87">
+                      <p>11.5625"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>30.2</p>
+                    </td>
+                    <td width="77">
+                      <p>14</p>
+                    </td>
+                    <td width="81">
+                      <p>47</p>
+                    </td>
+                    <td width="82">
+                      <p>13.5</p>
+                    </td>
+                    <td width="87">
+                      <p>11.875"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>31</p>
+                    </td>
+                    <td width="77">
+                      <p>15</p>
+                    </td>
+                    <td width="81">
+                      <p>48</p>
+                    </td>
+                    <td width="82">
+                      <p>14.5</p>
+                    </td>
+                    <td width="87">
+                      <p>12.1875"</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="93">
+                      <p>31.8</p>
+                    </td>
+                    <td width="77">
+                      <p>16</p>
+                    </td>
+                    <td width="81">
+                      <p>49</p>
+                    </td>
+                    <td width="82">
+                      <p>15.5</p>
+                    </td>
+                    <td width="87">
+                      <p>12.5"</p>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
