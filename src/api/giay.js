@@ -2,7 +2,7 @@ import axios from "axios";
 
 const token = JSON.parse(localStorage.getItem("token"));
 var url_upload = "api/upload";
-var URL = "http://localhost:8080";
+var URL = "https://nhat-api.herokuapp.com";
 var url_them_giay = "api/giay";
 var ulr_chitietmausac_giay = "api/chi_tiet_mau_sac";
 var ulr_chitietsize_giay = "api/chi_tiet_size";

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import authHeader from './authHeader';
-const API_URL = 'http://localhost:8080/api/test/';
+const API_URL = 'https://nhat-api.herokuapp.com/api/test/';
 class UserService {
     getPulicContent() {
         return axios.get(API_URL + 'all');

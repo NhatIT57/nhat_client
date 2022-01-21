@@ -19,7 +19,7 @@ import QuenMatKhau from './../component/Page/QuenMatKhau/index'
 import XemDonHang from "./../component/Page/XemDonHang/index";
 import Search from "./../component/Page/Search/index";
 
-export const API_ENPOINT = "http://localhost:8080";
+export const API_ENPOINT = "https://nhat-api.herokuapp.com";
 
 export const ROUTESDH = [{
     path: "/DatHang",

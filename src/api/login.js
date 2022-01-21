@@ -6,7 +6,7 @@ const url_login_admin = "api/users/login";
 const url_user = "api/users";
 
 const token = JSON.parse(localStorage.getItem("token"));
-var URL = "http://localhost:8080";
+var URL = "https://nhat-api.herokuapp.com";
 const authAxios = axios.create({
     baseURL: URL,
     headers: {
