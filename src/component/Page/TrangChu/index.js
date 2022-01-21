@@ -11,8 +11,9 @@ import * as actionGiay from "./../../../actions/giay";
 import * as apiGiay from "./../../../api/giay";
 import * as apiLoaiGiay from "./../../../api/loai_giay";
 import * as apiImage from "./../../../contants/index";
+import * as apiKM from "./../../../api/khuyen_mai";
 import Loadding from "./../../../loadding/index";
-
+import Moment from "moment";
 function TrangChu(props) {
   const {
     createActionNP,
@@ -29,6 +30,7 @@ function TrangChu(props) {
   const { fetchListLoaiGiayRequest } = CreateActionLoaiGiay;
   const [dataLGS, setDataLGS] = useState([]);
   const [dataLG, setDataLg] = useState([]);
+  const [dataKM, setDataKM] = useState([]);
   useEffect(() => {
     let current = true;
     setIsLoadding(true);
@@ -41,16 +43,21 @@ function TrangChu(props) {
           const { data } = res;
           if (res.status === 200) {
             setDataLGS(data.data);
+          }
+        });
+        await apiKM.getNow({date_now: Moment(Date()).format("YYYY-MM-DD")}).then((res) => {
+          const { data } = res;
+          if (res.status === 200) {
+            setDataKM(data.data);
             setIsLoadding(false);
           }
         });
-      
       }
       await fetchPostsList();
     })();
-
     return () => (current = false);
   }, []);
+
   useEffect(() => {
     const dataTLG = [];
     (async () => {
@@ -94,6 +101,19 @@ function TrangChu(props) {
                     for (var i = 0; i < d.length; i++) {
                       arr.push(d[i]);
                     }
+                    let stemp = null;
+                    let stemps = 0;
+                    if(dataKM.length>0){
+                      const filter = dataKM.filter((item)=>item.id_giay===item.id)
+                      if(filter.length>0){
+                        stemp = filter[0].phan_tram;
+                      }else{
+                        stemp = null
+                      }
+                    }
+                    if(stemp){
+                      stemps= stemp !== null ?( item.gia_ban - item.gia_ban * stemp /100) : 0;
+                    }
                     return (
                       <Link
                         key={item.id}
@@ -112,11 +132,16 @@ function TrangChu(props) {
                             <div className="name-product">
                               {data[0].ten_giay}
                             </div>
-                            <div className="price-product">
-                              {`${data[0].gia_ban
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
-                            </div>
+                            <div className={stemps !== 0 ? `price-product amount` :` price-product`}>
+                                  {`${data[0].gia_ban
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                                </div>
+                                <div className={` price-product`}>
+                                  {stemps?`${stemps
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`:<></>}
+                                </div>
                           </div>
                         </div>
                       </Link>
@@ -198,18 +223,28 @@ function TrangChu(props) {
                     mauTam.push(m);
                   }
                 });
+                let stemp = null;
+                if(dataKM.length>0){
+                  const filter = dataKM.filter((item)=>item.id_giay===giay.id)
+                  if(filter.length>0){
+                    stemp = filter[0].phan_tram;
+                  }else{
+                    stemp = null
+                  }
+                }
                 const g = {
                   id: giay.id,
                   ten_giay: giay.ten_giay,
                   mo_ta: giay.mo_ta,
                   id_loai_giay: giay.id_loai_giay,
                   gia_ban: giay.gia_ban,
-                  gia_ban_khuyen_mai: giay.gia_ban_khuyen_mai,
+                  gia_ban_khuyen_mai: stemp !== null ?( giay.gia_ban - giay.gia_ban * stemp /100) : 0,
                   trang_thai: giay.trang_thai,
                   mausac: mauTam,
                 };
                 dataTLG.push(g);
               });
+             
               return (
                 <div key={item.id} className="newProduct mt-3">
                   <div className="title-newProdcut">
@@ -228,6 +263,7 @@ function TrangChu(props) {
                       dataTLG.map((m, index) => {
                         const d = m.mausac[0].hinh_anh.split(",");
                         let arr = [];
+                        
                         for (var i = 0; i < d.length; i++) {
                           arr.push(d[i]);
                         }
@@ -244,13 +280,17 @@ function TrangChu(props) {
                                   src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
                                 />
                               </div>
-
                               <div className="name-price">
                                 <div className="name-product">{m.ten_giay}</div>
-                                <div className="price-product">
+                                <div className={m.gia_ban_khuyen_mai !== 0 ? `price-product amount` :` price-product`}>
                                   {`${m.gia_ban
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                                </div>
+                                <div className={` price-product`}>
+                                  {m.gia_ban_khuyen_mai?`${m.gia_ban_khuyen_mai
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`:<></>}
                                 </div>
                               </div>
                             </div>

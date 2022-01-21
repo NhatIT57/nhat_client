@@ -47,6 +47,11 @@ export const ThemKhuyenMai = (data) => {
     return authAxios.post(`${URL}/${url_them_khuyen_mai}`, data);
 };
 
+
+export const getNow = (data) => {
+    return authAxios.post(`${URL}/${url_them_khuyen_mai}/getNow`, data);
+};
+
 export const getKhuyenMai = () => {
     return authAxios.get(`/api/khuyen_mai`);
 };

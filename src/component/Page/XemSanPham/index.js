@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as giayAPI from "./../../../api/giay";
+import * as apiKM from "./../../../api/khuyen_mai";
 import "./index.scss";
 import SelectSize from "./select_Size/index";
 import SelectFast from "./select_Fast/index";
@@ -14,6 +15,7 @@ import * as ActionModal from "./../../../actions/modal";
 import { useHistory } from "react-router-dom";
 import jwt from "jsonwebtoken";
 import * as notify from "../../../contants/notifycation";
+import Moment from "moment";
 
 function XemSanPham(props) {
   const { CreateModal } = props;
@@ -25,6 +27,7 @@ function XemSanPham(props) {
     id_giay: "",
     ten_giay: "",
     gia_ban: 0,
+    gia_ban_khuyen_mai: 0,
     id_size: 0,
     ten_size: 0,
     id_mau_sac: 0,
@@ -33,12 +36,13 @@ function XemSanPham(props) {
     hinh_anh: "",
     soluong_con: 0,
   });
+  const [dataKM, setDataKM] = useState([]);
   const [mausac, setMausac] = useState([]);
   useEffect(() => {
     if (props.match.params) {
-      function fetchPostsLists() {
+      async function fetchPostsLists() {
         if (props.match.params.th) {
-          giayAPI
+          await giayAPI
             .xemSanPham({
               id: props.match.params.th,
             })
@@ -56,6 +60,14 @@ function XemSanPham(props) {
                       setDataTamAll(dataAll.data);
                     }
                   });
+              }
+            });
+          await apiKM
+            .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD") })
+            .then((res) => {
+              const { data } = res;
+              if (res.status === 200) {
+                setDataKM(data.data);
               }
             });
         }
@@ -120,6 +132,25 @@ function XemSanPham(props) {
       setData(dataTLG);
       if (dataTLG.length > 0) {
         const d = dataTLG[0].mausac[0].hinh_anh.split(",");
+
+        let stemp = null;
+        let stemps = 0;
+        if (dataKM.length > 0) {
+          const filter = dataKM.filter(
+            (items) => items.id_giay === dataTLG[0].id
+          );
+          if (filter.length > 0) {
+            stemp = filter[0].phan_tram;
+          } else {
+            stemp = null;
+          }
+          if (stemp) {
+            stemps =
+              stemp !== null
+                ? dataTLG[0].mausac[0].size[0].gia_ban - (dataTLG[0].mausac[0].size[0].gia_ban * stemp) / 100
+                : 0;
+          }
+        }
         setDataSubmit((dataSubmit) => ({
           ...dataSubmit,
           id_giay: dataTLG[0].id,
@@ -130,6 +161,7 @@ function XemSanPham(props) {
           soluong_con: dataTLG[0].mausac[0].size[0].so_luong,
           id_mau_sac: dataTLG[0].mausac[0].id_mau_sac,
           ten_mau_sac: dataTLG[0].mausac[0].ten_mau_sac,
+          gia_ban_khuyen_mai: stemps ? stemps : 0,
           soluong: 1,
           hinh_anh: d[0],
         }));
@@ -137,7 +169,7 @@ function XemSanPham(props) {
     }
 
     return () => (current = false);
-  }, [dataTam, dataTamAll]);
+  }, [dataTam, dataTamAll, dataKM]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -193,7 +225,7 @@ function XemSanPham(props) {
     e.persist();
     const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
     if (rx_live.test(e.target.value)) {
-      if(e.target.value !== ''){
+      if (e.target.value !== "") {
         if (parseInt(e.target.value) <= parseInt(dataSubmit.soluong_con)) {
           setDataSubmit((dataSubmit) => ({
             ...dataSubmit,
@@ -204,7 +236,7 @@ function XemSanPham(props) {
             `Số lượng bạn có thể mua là: ${dataSubmit.soluong_con}`
           );
         }
-      }else{
+      } else {
         setDataSubmit((dataSubmit) => ({
           ...dataSubmit,
           soluong: e.target.value,
@@ -230,56 +262,54 @@ function XemSanPham(props) {
   }, [data, dataSubmit]);
 
   function showModals() {
-    if(dataSubmit.soluong !== ''){
+    if (dataSubmit.soluong !== "") {
       const { setterToken } = CreateModal;
-    var token = localStorage.getItem("tokenTC");
-    if (token) {
-      const dd = JSON.parse(localStorage.getItem("product"));
-      const gb = dataSubmit.gia_ban;
-      const sl = dataSubmit.soluong;
-      let d = [];
-      var dataTamToken = dataSubmit;
-      dataTamToken.tongtien = gb * sl;
+      var token = localStorage.getItem("tokenTC");
+      if (token) {
+        const dd = JSON.parse(localStorage.getItem("product"));
+        const gb = dataSubmit.gia_ban;
+        const sl = dataSubmit.soluong;
+        let d = [];
+        var dataTamToken = dataSubmit;
+        dataTamToken.tongtien = gb * sl;
 
-      if (dd) {
-        let tam = [];
-        tam = dd.filter((item) => {
-          return item.id_giay === dataTamToken.id_giay;
-        });
+        if (dd) {
+          let tam = [];
+          tam = dd.filter((item) => {
+            return item.id_giay === dataTamToken.id_giay;
+          });
 
-        if (tam.length > 0) {
-          const i = dd.findIndex(
-            (item) => item.id_giay === dataTamToken.id_giay
-          );
-          dataTamToken.soluong =
-            parseInt(dataTamToken.soluong) + parseInt(tam[0].soluong);
+          if (tam.length > 0) {
+            const i = dd.findIndex(
+              (item) => item.id_giay === dataTamToken.id_giay
+            );
+            dataTamToken.soluong =
+              parseInt(dataTamToken.soluong) + parseInt(tam[0].soluong);
 
-          if (i !== -1) {
-            const newlist = [
-              ...dd.slice(0, i),
-              dataTamToken,
-              ...dd.slice(i + 1),
-            ];
-            d = newlist;
+            if (i !== -1) {
+              const newlist = [
+                ...dd.slice(0, i),
+                dataTamToken,
+                ...dd.slice(i + 1),
+              ];
+              d = newlist;
+            }
+          } else {
+            d = dd;
+            d.push(dataTamToken);
           }
         } else {
-          d = dd;
           d.push(dataTamToken);
         }
+        localStorage.setItem("product", JSON.stringify(d));
+        setterToken(d);
+        const { showModal } = CreateModal;
+        showModal();
       } else {
-        d.push(dataTamToken);
+        history.push("/DangNhap");
       }
-      localStorage.setItem("product", JSON.stringify(d));
-      setterToken(d);
-      const { showModal } = CreateModal;
-      showModal();
     } else {
-      history.push("/DangNhap");
-    }
-    }else{
-      notify.notificatonWarning(
-        `Hãy nhập số lượng bạn muốn mua`
-      );
+      notify.notificatonWarning(`Hãy nhập số lượng bạn muốn mua`);
     }
   }
   if (mausac.length > 0) {
@@ -320,12 +350,20 @@ function XemSanPham(props) {
                 </div>
                 <div className="watch-product__price mt-3">
                   <div className="select-fast__modify">Giá bán:</div>
-                  <div className="select-fast__modify ml-2">
+                 <div className="d-flex">
+                 <div className={data.gia_ban_khuyen_mai !== 0 ? "select-fast__modify ml-2 amount" : "select-fast__modify ml-2"}>
                     {`${dataSubmit.gia_ban
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
                     ₫
                   </div>
+                  <div className="select-fast__modify ml-2">
+                    {`${dataSubmit.gia_ban_khuyen_mai
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
+                    ₫
+                  </div>
+                 </div>
                 </div>
                 <div className="watch-product__price mt-3">
                   <div className="select-fast__modify">Số lượng giới hạn:</div>

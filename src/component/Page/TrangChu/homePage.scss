@@ -161,6 +161,9 @@
     list-style: none none;
 }
 
+ .amount {
+    text-decoration: line-through;
+}
 
 @media screen and (min-width: 1px)and(max-width: 739px) {
     .owl-theme .owl-nav {

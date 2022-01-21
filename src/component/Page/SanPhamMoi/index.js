@@ -4,8 +4,11 @@ import Pagination from "react-js-pagination";
 import * as giayAPI from "./../../../api/giay";
 import { Link, useHistory } from "react-router-dom";
 import * as apiGiay from "./../../../api/giay";
+import * as apiKM from "./../../../api/khuyen_mai";
 import * as apiImage from "./../../../contants/index";
 import "./index.scss";
+import Moment from "moment";
+import Loadding from "./../../../loadding/index";
 function SanPhamMoi(props) {
   const [activePage, setActivePage] = useState(1);
   const [allPage, setAllPage] = useState(0);
@@ -14,6 +17,9 @@ function SanPhamMoi(props) {
   const [dataTamAll, setDataTamAll] = useState([]);
   const history = useHistory();
   const [isActive, setActive] = useState("");
+  const [isLoading, setIsLoadding] = useState(false);
+  const [dataKM, setDataKM] = useState([]);
+  
   const [dataPost, setDataPost] = useState({
     sortBy: "date_create",
     groupBy: "DESC",
@@ -22,8 +28,9 @@ function SanPhamMoi(props) {
   });
 
   useEffect(() => {
+    setIsLoadding(true);
     if (props.match.params) {
-      function fetchPostsLists() {
+      async function fetchPostsLists() {
         if (props.match.params.SortBy && props.match.params.page) {
           let pageN = 0;
           setActive(
@@ -35,7 +42,7 @@ function SanPhamMoi(props) {
             pageN = parseInt(props.match.params.page) * 12 - 12;
           }
           setActivePage(parseInt(props.match.params.page));
-          giayAPI
+          await giayAPI
             .postSanPhamMoiPage({
               sortBy: props.match.params.SortBy,
               groupBy: props.match.params.GroupBy,
@@ -46,7 +53,6 @@ function SanPhamMoi(props) {
               const { data } = res;
               if (res.status === 200) {
                 setDataTam(data.data);
-
                 giayAPI
                   .postSanPhamMoi({
                     id_loai_giay: parseInt(props.match.params.th),
@@ -64,6 +70,7 @@ function SanPhamMoi(props) {
                         const dataLG = resP.data;
                         if (resP.status === 200) {
                           setAllPage(dataLG.data.length);
+                          setIsLoadding(false);
                         }
                       });
                     }
@@ -71,7 +78,7 @@ function SanPhamMoi(props) {
               }
             });
         } else {
-          giayAPI
+          await giayAPI
             .postSanPhamMoiPage({
               sortBy: "date_create",
               groupBy: "DESC",
@@ -98,17 +105,29 @@ function SanPhamMoi(props) {
                   });
               }
             });
-          apiGiay.getGiay().then((resP) => {
+          await apiGiay.getGiay().then((resP) => {
             const dataLG = resP.data;
             if (resP.status === 200) {
               setAllPage(dataLG.data.length);
+              setIsLoadding(false);
             }
           });
         }
       }
+      
 
       fetchPostsLists();
     }
+    setIsLoadding(true);
+    apiKM
+      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD") })
+      .then((res) => {
+        const { data } = res;
+        if (res.status === 200) {
+          setDataKM(data.data);
+          setIsLoadding(false);
+        }
+      });
     return () => (setDataTam([]), setDataTamAll([]));
   }, [props.match.params]);
 
@@ -208,132 +227,176 @@ function SanPhamMoi(props) {
       );
     }
   }
-  return (
-    <div className="ThuongHieuTC">
-      <div className="container">
-        <div className="sort-cate clearfix margin-bottom-10 hidden-xs">
-          <div className="sort-cate-left hidden-xs">
-            <h3>Xếp theo:</h3>
-            <ul>
-              <li
-                className={
-                  isActive === "btn-quick-sort ten_giay-asc"
-                    ? "btn-quick-sort active"
-                    : null
-                }
-              >
-                <a onClick={() => sortby("ten_giay-asc")} title="Tên A-Z">
-                  <i></i>Tên A-Z
-                </a>
-              </li>
-              <li
-                className={
-                  isActive === "btn-quick-sort ten_giay-desc"
-                    ? "btn-quick-sort ten_giay-desc active"
-                    : null
-                }
-              >
-                <a onClick={() => sortby("ten_giay-desc")} title="Tên Z-A">
-                  <i></i>Tên Z-A
-                </a>
-              </li>
-              <li
-                className={
-                  isActive === "btn-quick-sort date_create-desc"
-                    ? "btn-quick-sort date_create-desc active"
-                    : null
-                }
-              >
-                <a onClick={() => sortby("date_create-desc")} title="Hàng mới">
-                  <i></i>Hàng mới
-                </a>
-              </li>
-              <li
-                className={
-                  isActive === "btn-quick-sort gia_ban-asc"
-                    ? "tn-quick-sort gia_ban-asc active"
-                    : null
-                }
-              >
-                <a
-                  onClick={() => sortby("gia_ban-asc")}
-                  title="Giá thấp đến cao"
+  if (isLoading === true) {
+    return <Loadding></Loadding>;
+  } else {
+    return (
+      <div className="ThuongHieuTC">
+        <div className="container">
+          <div className="sort-cate clearfix margin-bottom-10 hidden-xs">
+            <div className="sort-cate-left hidden-xs">
+              <h3>Xếp theo:</h3>
+              <ul>
+                <li
+                  className={
+                    isActive === "btn-quick-sort ten_giay-asc"
+                      ? "btn-quick-sort active"
+                      : null
+                  }
                 >
-                  <i></i>Giá thấp đến cao
-                </a>
-              </li>
-              <li
-                className={
-                  isActive === "btn-quick-sort gia_ban-desc"
-                    ? "btn-quick-sort gia_ban-desc active"
-                    : null
-                }
-              >
-                <a
-                  onClick={() => sortby("gia_ban-desc")}
-                  title="Giá cao xuống thấp"
+                  <a onClick={() => sortby("ten_giay-asc")} title="Tên A-Z">
+                    <i></i>Tên A-Z
+                  </a>
+                </li>
+                <li
+                  className={
+                    isActive === "btn-quick-sort ten_giay-desc"
+                      ? "btn-quick-sort ten_giay-desc active"
+                      : null
+                  }
                 >
-                  <i></i>Giá cao xuống thấp
-                </a>
-              </li>
-            </ul>
+                  <a onClick={() => sortby("ten_giay-desc")} title="Tên Z-A">
+                    <i></i>Tên Z-A
+                  </a>
+                </li>
+                <li
+                  className={
+                    isActive === "btn-quick-sort date_create-desc"
+                      ? "btn-quick-sort date_create-desc active"
+                      : null
+                  }
+                >
+                  <a
+                    onClick={() => sortby("date_create-desc")}
+                    title="Hàng mới"
+                  >
+                    <i></i>Hàng mới
+                  </a>
+                </li>
+                <li
+                  className={
+                    isActive === "btn-quick-sort gia_ban-asc"
+                      ? "tn-quick-sort gia_ban-asc active"
+                      : null
+                  }
+                >
+                  <a
+                    onClick={() => sortby("gia_ban-asc")}
+                    title="Giá thấp đến cao"
+                  >
+                    <i></i>Giá thấp đến cao
+                  </a>
+                </li>
+                <li
+                  className={
+                    isActive === "btn-quick-sort gia_ban-desc"
+                      ? "btn-quick-sort gia_ban-desc active"
+                      : null
+                  }
+                >
+                  <a
+                    onClick={() => sortby("gia_ban-desc")}
+                    title="Giá cao xuống thấp"
+                  >
+                    <i></i>Giá cao xuống thấp
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          {data.length > 0 && data[0].mausac.length > 0 ? (
-            data.map((item, index) => {
-              const d = item.mausac[0].hinh_anh.split(",");
-              let arr = [];
-              for (var i = 0; i < d.length; i++) {
-                arr.push(d[i]);
-              }
-              return (
-                <div
-                  key={item.id}
-                  className="height-margin col-xs-6 col-sm-4 col-md-4 col-lg-4"
-                >
-                  <Link to={`/XemSamPham/${item.id}`} className="title-hp">
-                    <div className="one-procuts">
-                      <div className="width-image">
-                        <img
-                          className="img"
-                          src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
-                        />
-                      </div>
+          <div className="row">
+            {data.length > 0 && data[0].mausac.length > 0 ? (
+              data.map((item, index) => {
+                const d = item.mausac[0].hinh_anh.split(",");
+                let arr = [];
+                for (var i = 0; i < d.length; i++) {
+                  arr.push(d[i]);
+                }
+                let stemp = null;
+                let stemps = 0;
+                if (dataKM.length > 0) {
+                  const filter = dataKM.filter(
+                    (items) => items.id_giay === item.id
+                  );
 
-                      <div className="name-price">
-                        <div className="name-product">{item.ten_giay}</div>
-                        <div className="price-product">
-                          {`${item.gia_ban
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                  if (filter.length > 0) {
+                    stemp = filter[0].phan_tram;
+                  } else {
+                    stemp = null;
+                  }
+                }
+                if (stemp) {
+                  stemps =
+                    stemp !== null
+                      ? item.gia_ban - (item.gia_ban * stemp) / 100
+                      : 0;
+                }
+
+                return (
+                  <div
+                    key={item.id}
+                    className="height-margin col-xs-6 col-sm-4 col-md-4 col-lg-4"
+                  >
+                    <Link to={`/XemSamPham/${item.id}`} className="title-hp">
+                      <div className="one-procuts">
+                        <div className="width-image">
+                          <img
+                            className="img"
+                            src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
+                          />
                         </div>
+
+                        <div className="name-price">
+                            <div className="name-product">
+                              {data[0].ten_giay}
+                            </div>
+                            <div
+                              className={
+                                stemps !== 0
+                                  ? `price-product amount`
+                                  : ` price-product`
+                              }
+                            >
+                              {`${data[0].gia_ban
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                            </div>
+                            <div className={` price-product`}>
+                              {stemps ? (
+                                `${stemps
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                          </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })
-          ) : (
-            <div></div>
-          )}
-        </div>
-        <div className="col-sm-12">
-          <div className="pagination">
-            <Pagination
-              prevPageText="prev"
-              nextPageText="next"
-              activePage={activePage}
-              itemsCountPerPage={12}
-              totalItemsCount={allPage}
-              pageRangeDisplayed={12}
-              onChange={handlePageChange}
-            />
+                    </Link>
+                  </div>
+                );
+              })
+            ) : (
+              <div></div>
+            )}
+          </div>
+          <div className="col-sm-12">
+            <div className="pagination">
+              <Pagination
+                prevPageText="prev"
+                nextPageText="next"
+                activePage={activePage}
+                itemsCountPerPage={12}
+                totalItemsCount={allPage}
+                pageRangeDisplayed={12}
+                onChange={handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 SanPhamMoi.propTypes = {};

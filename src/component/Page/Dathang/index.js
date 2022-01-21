@@ -15,6 +15,8 @@ import * as apiCTS from "./../../../api/chi_tiet_size";
 import { useHistory } from "react-router-dom";
 import * as notify from "../../../contants/notifycation";
 import * as apiSend from "../../../api/sent_mail";
+import Moment from "moment";
+import * as apiKM from "./../../../api/khuyen_mai";
 function DatHang(props) {
   const history = useHistory();
   const { onChangeInput, handleSubmit, data, setData, errors, setErrors } =
@@ -27,75 +29,76 @@ function DatHang(props) {
   const [tong, setTong] = useState(0);
   const [valueRadio, setValueRadio] = useState(true);
   var t = 0;
-
+  const [dataKM, setDataKM] = useState([]);
+  const [isKM, setIsKM] = useState(false);
   async function submit() {
-   if(valueRadio){
-    await apiDH
-    .Them(data)
-    .then((response) => {
-      if (response.status === 200) {
-        var id = response.data.data.insertId;
-        apiDH.notifyDat_hang({ id: response.data.data.insertId });
-        notify.notificatonSuccess("Bạn đã đặt hàng thành công");
-        apiSend
-          .sendMail({
-            to: data.email,
-            subject: `Bạn về đặt một đơn hàng mã đơn hàng là: ${id}`,
-            body: `<div><div><p>Bấm vào link bên dưới để xem chi tiết đơn hàng: <a href=http://localhost:3000/XemDonHang/id=${id}>Link</a></p></div></div>`,
-          })
-          .then((response) => {
-            if (response.status === 200) {
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        token.map((i, index) => {
-          var tam = dataSize;
-          apiCDH
-            .Them({
-              id_giay: i.id_giay,
-              id_dat_hang: id,
-              so_luong: i.soluong,
-              tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
-              id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
-            })
-            .then((response) => {
-              if (response.status === 200) {
-                var sl =
-                  parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
-                apiCTS
-                  .update({
-                    id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
-                    id_size: dataSize[index].id_size,
-                    so_luong: sl,
-                  })
-                  .then((response) => {
-                    if (response.status === 200) {
-                      localStorage.removeItem("product");
-                      // setterToken([]);
-                      history.push("/");
-                    }
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-              }
-            })
-            .catch((error) => {
-              console.log(error);
+    if (valueRadio) {
+      await apiDH
+        .Them(data)
+        .then((response) => {
+          if (response.status === 200) {
+            var id = response.data.data.insertId;
+            apiDH.notifyDat_hang({ id: response.data.data.insertId });
+            notify.notificatonSuccess("Bạn đã đặt hàng thành công");
+            apiSend
+              .sendMail({
+                to: data.email,
+                subject: `Bạn về đặt một đơn hàng mã đơn hàng là: ${id}`,
+                body: `<div><div><p>Bấm vào link bên dưới để xem chi tiết đơn hàng: <a href=http://localhost:3000/XemDonHang/id=${id}>Link</a></p></div></div>`,
+              })
+              .then((response) => {
+                if (response.status === 200) {
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            token.map((i, index) => {
+              var tam = dataSize;
+              apiCDH
+                .Them({
+                  id_giay: i.id_giay,
+                  id_dat_hang: id,
+                  so_luong: i.soluong,
+                  tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
+                  id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
+                })
+                .then((response) => {
+                  if (response.status === 200) {
+                    var sl =
+                      parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
+                    apiCTS
+                      .update({
+                        id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
+                        id_size: dataSize[index].id_size,
+                        so_luong: sl,
+                      })
+                      .then((response) => {
+                        if (response.status === 200) {
+                          localStorage.removeItem("product");
+                          // setterToken([]);
+                          history.push("/");
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-   }else{
-     apiDH.getThanhToan(data).then((rsp)=>{
-      window.location.href = `http://localhost:8888/order/create_payment_url`
-     })
-   }
+    } else {
+      apiDH.getThanhToan(data).then((rsp) => {
+        window.location.href = `http://localhost:8888/order/create_payment_url`;
+      });
+    }
   }
 
   async function onchangeSelect(e) {
@@ -121,14 +124,36 @@ function DatHang(props) {
     const product = JSON.parse(localStorage.getItem("product"));
     setToken(product);
     var stemp = 0;
-    product.map((item) => {
-      stemp += item.soluong * item.gia_ban;
-    });
-    setData((data) => ({
-      ...data,
-      tong_tien: stemp,
-    }));
-    setTong(stemp);
+    apiKM
+      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD") })
+      .then((res) => {
+        const { data } = res;
+        if (res.status === 200) {
+          setDataKM(data.data);
+          if (data.data.length > 0) {
+            setIsKM(true);
+            product.map((item) => {
+              const ste = data.data.filter(
+                (items) => items.id_giay === item.id_giay
+              );
+              if (ste.length > 0) {
+                stemp += item.soluong * item.gia_ban_khuyen_mai;
+              } else {
+                stemp += item.soluong * item.gia_ban;
+              }
+            });
+          } else {
+            product.map((item) => {
+              stemp += item.soluong * item.gia_ban;
+            });
+          }
+          setData((data) => ({
+            ...data,
+            tong_tien: stemp,
+          }));
+          setTong(stemp);
+        }
+      });
     getTinhThanh();
   }, []);
 
@@ -212,7 +237,6 @@ function DatHang(props) {
             </div>
             {token ? (
               token.map((i, index) => {
-                t += i.soluong * i.gia_ban;
                 return (
                   <div key={index + 1} className="modal-list">
                     <div className="row">
@@ -232,9 +256,15 @@ function DatHang(props) {
                       </div>
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Đơn giá:</div>
-                        <div className="modal-price">{`${i.gia_ban
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
+                        {isKM && i.gia_ban_khuyen_mai !== 0 ? (
+                              <div className="modal-price">{`${i.gia_ban_khuyen_mai
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
+                            ) : (
+                              <div className="modal-price">{`${i.gia_ban
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
+                            )}
                       </div>
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Số lượng:</div>
@@ -243,10 +273,24 @@ function DatHang(props) {
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Thành tiền:</div>
                         <div className="modal-priceAll">
-                          {(parseInt(i.soluong) * parseInt(i.gia_ban))
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                          ₫
+                        {isKM && i.gia_ban_khuyen_mai !== 0 ? (
+                              <div className="modal-priceAll">
+                                {(
+                                  parseInt(i.soluong) *
+                                  parseInt(i.gia_ban_khuyen_mai)
+                                )
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                ₫
+                              </div>
+                            ) : (
+                              <div className="modal-priceAll">
+                                {(parseInt(i.soluong) * parseInt(i.gia_ban))
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                                ₫
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -258,38 +302,41 @@ function DatHang(props) {
             )}
             <div className="hr"></div>
             <div className="mt-2">{`Phí vận chuyển: ${data.ship}`}</div>
-            <div>{`Tổng tiền: ${data.tong_tien}`}</div>
+            <div>{`Tổng tiền: ${data.tong_tien
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
             <div className="hr"></div>
           </div>
         </div>
 
         <div className="thkh">
           <div className="container mt-2">
-            <div><div className="main-header">Hình thúc thanh toán</div>
-            <div className="radio-buttons d-flex">
-                  <div className="mr-2 thanhtoan">
-                    <input
-                      className="thanhtoan"
-                      value="thanhtoan"
-                      name="thanhtoan"
-                      type="radio"
-                      onChange={(e)=>handleChange(e,true)}
-                      checked={valueRadio === true ? true : false}
-                    />
-                      Thanh toán khi nhận hàng
-                  </div>
-                  <div className="mr-2 thanhtoan">
-                    <input
-                      className="thanhtoan"
-                      value="vnp"
-                      name="vnp"
-                      type="radio"
-                      onChange={(e)=>handleChange(e,false)}
-                      checked={valueRadio === false ? true : false}
-                    />
-                    Thanh toán VNPAY
-                  </div>
+            <div>
+              <div className="main-header">Hình thúc thanh toán</div>
+              <div className="radio-buttons d-flex">
+                <div className="mr-2 thanhtoan">
+                  <input
+                    className="thanhtoan"
+                    value="thanhtoan"
+                    name="thanhtoan"
+                    type="radio"
+                    onChange={(e) => handleChange(e, true)}
+                    checked={valueRadio === true ? true : false}
+                  />
+                  Thanh toán khi nhận hàng
                 </div>
+                <div className="mr-2 thanhtoan">
+                  <input
+                    className="thanhtoan"
+                    value="vnp"
+                    name="vnp"
+                    type="radio"
+                    onChange={(e) => handleChange(e, false)}
+                    checked={valueRadio === false ? true : false}
+                  />
+                  Thanh toán VNPAY
+                </div>
+              </div>
             </div>
             <div className="main-header mt-3">Thông tin nhận hàng</div>
             <div className="main-form">
