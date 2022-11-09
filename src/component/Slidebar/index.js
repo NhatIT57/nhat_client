@@ -8,7 +8,7 @@ import { IconContext } from 'react-icons';
 import * as actionLoaiGiay from './../../actions/loai_giay';
 
 function Slidebar(props) {
-	const { ListLoaiGiay, CreateActionLoaiGiay } = props;
+	const { ListLoaiGiay, CreateActionLoaiGiay, onClickHide } = props;
 	function showSidebar() {
 		onClickShowSlider(sidebar);
 	}
@@ -48,6 +48,7 @@ function Slidebar(props) {
 
 	return (
 		<IconContext.Provider className="navbar-slide" value={{ color: '#fff' }}>
+			<div className={sidebar ? 'backgroundMenu_css' : ''} onClick={onClickHide}></div>
 			<nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
 				<ul className="nav-menu-items">
 					<li className="row-menu" title="Trang Chủ">
@@ -57,7 +58,7 @@ function Slidebar(props) {
 					</li>
 					<li className="row-menu" title="Giày">
 						<Dropdown>
-							<Dropdown.Toggle id="title" variant="success" id="dropdown-basic">
+							<Dropdown.Toggle  variant="success" id="dropdown-basic">
 								Giày sneaker
 							</Dropdown.Toggle>
 							<Dropdown.Menu className="dropdown-item-menu">{dropLoaiGiays()}</Dropdown.Menu>

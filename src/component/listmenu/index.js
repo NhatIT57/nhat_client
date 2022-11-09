@@ -158,7 +158,7 @@ function DashBoard(props) {
     }
   }
   return (
-    <div key={name} className="chia" ref={ref} onClick={()=>onClickHide()}>
+    <div key={name} className="chia" ref={ref}>
         <div className="head">
         <div className="container">
         <h1>Shop Giày Thể Thao - Sneaker Nam, Nữ Replica Đẹp Giá Rẻ</h1>
@@ -549,8 +549,9 @@ function DashBoard(props) {
         onClick={onClickHide}
       ></div> */}
       <Slidebar
-        onClickShowSlider={onClickShowSlider}
+        onClickShowSlider={()=>onClickShowSlider()}
         sidebar={sidebar}
+        onClickHide={()=>onClickHide()}
       ></Slidebar>
       <div className="background_css">
         <div className="container nav-evo-watch">
