@@ -12,6 +12,7 @@ import * as apiGiay from "./../../../api/giay";
 import * as apiLoaiGiay from "./../../../api/loai_giay";
 import * as apiImage from "./../../../contants/index";
 import * as apiKM from "./../../../api/khuyen_mai";
+import * as apiQuangCao from "./../../../api/quang_cao";
 import Loadding from "./../../../loadding/index";
 import Moment from "moment";
 function TrangChu(props) {
@@ -31,6 +32,7 @@ function TrangChu(props) {
   const [dataLGS, setDataLGS] = useState([]);
   const [dataLG, setDataLg] = useState([]);
   const [dataKM, setDataKM] = useState([]);
+  const [dataQuanCao, setDataQuangCao] = useState([]);
   useEffect(() => {
     let current = true;
     setIsLoadding(true);
@@ -53,6 +55,11 @@ function TrangChu(props) {
           }
         });
       }
+      await apiQuangCao.getQuangCao().then((res) => {
+        if (res.status === 200) {
+          setDataQuangCao(res.data.data);
+        }
+      });
       await fetchPostsList();
     })();
     return () => (current = false);
@@ -85,7 +92,15 @@ function TrangChu(props) {
     } else {
       return (
         <div className="homePage">
-          <div className="container">
+           <div className="d-flex justify-content-center quangcao"> 
+           <OwlCarousel autoplay items={1} className="owl-theme quangcao" loop nav>
+              {dataQuanCao && dataQuanCao.map((item)=>{
+                return  <div key={item.id} className="img-banner">
+                <img src={`http://localhost:8080/images/${item.hinh_anh}`}></img>
+              </div>
+              })}
+              </OwlCarousel></div>
+          <div className="container mt-5">
             <div className="newProduct">
               <div className="title-newProdcut">
                 <Link to="/SanPhamMoi" className="title-hp">
@@ -247,6 +262,7 @@ function TrangChu(props) {
              
               return (
                 <div key={item.id} className="newProduct mt-3">
+                  
                   <div className="title-newProdcut">
                     <Link to="/SanPhamMoi" className="title-hp">
                       {item.ten_loai_giay}

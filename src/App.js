@@ -45,12 +45,15 @@ function App(props) {
     });
     return xhtml;
   }
-
+  const handleScroll = event => {
+    console.log('scrollTop: ', event.currentTarget.scrollTop);
+    console.log('offsetHeight: ', event.currentTarget.offsetHeight);
+  };
   return (
     <Provider store={store}>
       <BrowserRouter>
         <ReactNotifications> </ReactNotifications>
-        <div className="tong">
+        <div className="tong"  onScroll={handleScroll}>
           <ModalProduct></ModalProduct>
           <Switch>
             {renderAdminRouteDH()}

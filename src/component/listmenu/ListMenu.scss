@@ -1,27 +1,23 @@
-.header-CT {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
+
 
 .iconMenu {
-    display: flex;
-    flex: 2;
+    float: left;
+    height: 100px;
 }
 
 .iconMenu .MuiSvgIcon-root {
     font-size: 40px;
-    margin: auto 0;
+    margin: auto auto;
+    cursor: pointer;
 }
 
-.logo {
-    display: flex;
-    flex: 1;
-}
+// .logo {
+//     display: flex;
+//     flex: 1;
+// }
 
 .logo img {
-    height: 150px;
-    display: block;
+    height: 100px;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;
@@ -144,25 +140,46 @@
 .nav-evo-watch {
     margin-top: 50px;
 }
+.background_css{
+    background: linear-gradient(to bottom,#242428 10%,#38383e 44%,#38383e 100%);
+}
 
+.backgroundFixed_css {
+position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
 .nav {
     display: flex;
     justify-content: space-between;
-    height: 45px;
+    height: 60px;
 }
 
 .nav .nav-item {
     display: flex;
+    flex-wrap: wrap;
+    max-width: 95px;
+}
+
+.img-menu{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0 0 0;
+    height: 24px;
 }
 
 .nav .nav-item a {
     margin: auto 0;
-    color: #333;
+    color: #fff;
     text-decoration: none;
-    padding: 10px 10px;
     font-weight: bold;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 18px;
+    font-size: 16px;
+    width: 100%;
+    height: 50%;
+    text-align: center;
 }
 
 .nav .row-menu {
@@ -222,7 +239,6 @@
     }
     .title-account,
     .title-giohang,
-    .title-search,
     .account,
     .nav-evo-watch {
         display: none;
@@ -236,14 +252,11 @@
     .nav .nav-item a {
         font-size: 15px;
     }
-    .iconMenu {
-        width: 25% !important;
-        display: flex;
-    }
-    .logo {
-        width: 50% !important;
-        display: flex;
-    }
+   
+    // .logo {
+    //     width: 50% !important;
+    //     display: flex;
+    // }
     .logo img {
         height: 100%;
     }
@@ -256,10 +269,304 @@
     }
 }
 
+a, abbr, acronym, address, applet, article, aside, audio, big, blockquote, body, button, canvas, caption, center, cite, code, dd, del, details, dfn, dl, dt, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, img, input, ins, kbd, label, legend, li, menu, nav, object, ol, p, pre, q, s, samp, section, select, small, strike, sub, summary, sup, textarea, tfoot, tt, u, ul, var, video {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    font-style: inherit;
+    line-height: inherit;
+    vertical-align: baseline;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    color: #333;
+    zoom: 1;
+}
+
+.container {
+    position: relative;
+}
+.head .container {
+    margin: 0 auto;
+    width: 99%;
+    max-width: 1260px;
+}
+
+.head:before {
+    border-bottom: 1px solid #bcbcbc;
+    top: 33px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+.container:after, .container:before {
+    display: table;
+    content: " ";
+}
+
+.head h1 {
+    float: left;
+    margin-top: 7px;
+    font-size: 14px;
+}
+
+.head .texttop {
+    float: right;
+}
+
+.head .texttop ul.text {
+    border: 1px solid #bcbcbc;
+    z-index: 1;
+    border-radius: 0 0 3px 3px;
+    background: #fff;
+    background: linear-gradient(to bottom,#fff 0,#fefefe 16%,#f7f7f7 100%,#f2f2f2 50%,#f2f2f2 80%,#f2f2f2 100%);
+    overflow: hidden;
+    border-top: 0;
+    border-right: 0;
+    float: left;
+}
+
+.head .texttop ul.text li {
+    text-transform: uppercase;
+    border-right: 1px solid #bcbcbc;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: normal;
+    padding: 12px 15px 10px;
+    float: left;
+}
+
+.head .texttop ul.text p {
+    color: #e77e24;
+    margin-bottom: 6px;
+}
+
+.head .texttop ul.text span {
+    display: block;
+    color: #666;
+}
+
+svg#Capa_1 {
+    width: 20px;
+    height: 20px;
+}
+
+svg#Capa_2 {
+    width: 36px;
+    height: 36px;
+}
+
+.head div#cart i {
+    display: block;
+    margin-top: 7px;
+}
+
+.head .texttop ul.top {
+    border: 1px solid #bcbcbc;
+    z-index: 1;
+    border-radius: 0 0 3px 3px;
+    background: #353535;
+    background: linear-gradient(to bottom,#242428 10%,#38383e 44%,#38383e 100%);
+    overflow: hidden;
+    border-top: 0;
+    border-right: 0;
+    float: left;
+    margin-left: 10px;
+    height: 60px;
+}
+
+.head .texttop ul.top li {
+    padding: 5px 15px;
+    min-width: 100px;
+    float: left;
+    border-right: 1px solid #eee;
+    max-width: 300px;
+}
+
+.head .texttop ul.top li .img, .head div#cart, a.cartmb, nav.menu li, nav.menu span.brand {
+    text-align: center;
+}
+
+img:not(.initial) {
+    transition: opacity 2s;
+}
+
+.head .texttop ul.top li p {
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.head div#cart {
+    position: relative;
+    display: block;
+    background: #e77e24;
+    margin-left: 10px;
+    width: 95px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 58px;
+    float: right;
+    color: #fff;
+    cursor: pointer;
+}
+.clear {
+    clear: both;
+    height: 1px;
+}
+
+.header .logo {
+    float: left;
+    margin-top: -10px;
+    position: relative;
+    overflow: hidden;
+}
+
+header .logo img {
+    margin-top: 5px;
+}
+
+header .logomb {
+    display: none;
+}
+
+.header .account, .header .feedback {
+    float: right;
+    margin: 7px 0 0 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.header .account svg {
+    vertical-align: text-top;
+    margin: 3px 5px 0 0;
+    border-radius: 100%;
+    border: 2px solid #585859;
+}
+
+.header .feedback {
+    margin-top: 10px;
+}
+
+.header .feedback img.default {
+    height: 36px;
+    vertical-align: text-top;
+    margin-right: 5px;
+}
+
+img:not(.initial) {
+    transition: opacity 2s;
+}
+
+.header .feedback span{
+    margin: 0px 5px;
+}
+
+
+.header .feedback img.default {
+    height: 36px;
+    vertical-align: text-top;
+    margin-right: 5px;
+}
+
+.header .feedback p.capdo {
+    color: #48904a;
+    font-size: 15px;
+    font-weight: 400;
+    position: absolute;
+    left: 41px;
+    top: 18px;
+    white-space: nowrap;
+}
+
+
+.head::after, header::after {
+    content: ' ';
+    display: block;
+    clear: both;
+}
+
+svg#Layer_1{
+    width: 32px;
+    height: 32px;
+}
+.feedback a:hover, .account a:hover {
+    color: #c13828;
+    text-decoration: none;
+}
+.header .account, .header .feedback {
+    float: right;
+    margin: 7px 0 0 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.header .account p.capdo {
+    font-weight: 400;
+    position: absolute;
+    bottom: 0px;
+    left: 41px;
+    background: #48904a;
+    color: #fff;
+    padding: 0px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.search {
+    float: right;
+    width: 488px;
+    padding-top: 10px;
+    margin-bottom: 15px;
+}
+
+
+.search form {
+    width: 100%;
+    height: 36px;
+    position: relative;
+}
+
+
+.search input[type=text] {
+    padding: 0 10px;
+    width: 100%;
+    background: 0 0;
+    line-height: 36px;
+    box-shadow: 0 2px 4px rgba(204, 204, 204, 0.26) inset;
+    border-radius: 4px;
+    border: 1px solid #b6b6b6;
+    box-sizing: border-box;
+    color: #57575b;
+    font-size: 14px;
+}
+
+.search input[type=submit] {
+    background: url('http://localhost:8080/images/Search_Icon.svg') center no-repeat #e77e24;
+    text-indent: -9999px;
+    width: 44px;
+    height: 36px;
+    margin: -1px;
+    cursor: pointer;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    background-size: 20px;
+    border-radius: 4px;
+}
+
 @media screen and (min-width: 70px)and(max-width: 1040px) {
     .title-account,
-    .title-giohang,
-    .title-search {
+    .title-giohang {
         display: none;
     }
     .container {
@@ -270,7 +577,7 @@
         width: 100%;
     }
     .logo img {
-        height: 120px;
+        height: 100px;
     }
     .nav-evo-watch {
         margin-top: 20px;
@@ -279,7 +586,7 @@
         font-size: 18px;
     }
     .nav .nav-item a {
-        font-size: 18px;
+        font-size: 16px;
     }
 }
 
