@@ -177,7 +177,7 @@ function DashBoard(props) {
           <ul className="top">
             <li>
               <Link
-                to="/in-tuc-giay-the-thao"
+                to="/TinTuc"
                 title="Cập nhật tin tức về các thương hiệu giày sneaker mới 2021"
               >
                 <div className="img">
