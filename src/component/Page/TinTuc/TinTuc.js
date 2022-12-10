@@ -41,22 +41,20 @@ const TinTuc = (props) => {
               ? data.map((item) => {
                   return (
                     <li key={item.id}>
-                      <a
-                        href="giay-air-jordan-1-high-rebellionaire.html"
-                        title="Air Jordan 1 High Rebellionaire thiết kế độc lạ chưa từng thấy"
+                      <Link to={`/Tintuc/id=${item.id}`}
+                        title={item.ten_giay}
                         className="img"
                       >
                         <img
                           className=" lazyloaded"
                           src={`http://localhost:8080/images/${item.hinh_anh}`}
                         />
-                      </a>
-                      <a
-                        href="giay-air-jordan-1-high-rebellionaire.html"
-                        title="Air Jordan 1 High Rebellionaire thiết kế độc lạ chưa từng thấy"
+                      </Link>
+                      <Link to={`/Tintuc/id=${item.id}`}
+                        title={item.ten_giay}
                       >
                         <h3>{item.ten_tin_tuc}</h3>
-                      </a>
+                      </Link>
                       <p className="date">14:43:49 12-07-2022</p>
                       <div>{item.tom_tat}</div>
                     </li>
@@ -65,15 +63,6 @@ const TinTuc = (props) => {
               : null}
           </ul>
           <div className="clear10" />
-          <div
-            className="show_more_main  show_morenews"
-            val={17}
-            count={17}
-            url="tin-tuc-giay-the-thao"
-          >
-            {" "}
-            Xem thêm Tin tức
-          </div>
         </div>
         <div className="newsright">
           <div className="titnews blue">Hàng bán chạy tháng {d.getMonth()}</div>

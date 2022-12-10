@@ -52,3 +52,7 @@ export const updateTinTuc = (data) => {
 export const deleteTinTuc = (data) => {
     return authAxios.post(`/api/tin_tuc/delete`, data);
 };
+
+export const xemTinTuc = (data) => {
+    return authAxios.get(`/api/tin_tuc/${data}`);
+};

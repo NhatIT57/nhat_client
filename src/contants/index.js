@@ -138,16 +138,16 @@ export const ROUTESSTC = [{
         component: XemDonHang,
       },
       {
-        path: "/TinTuc",
-        name: "Tin Tức",
-        exact: false,
-        component: TinTuc,
-      },
-      {
         path: "/TinTuc/id=:id",
         name: "Tin Tuc",
         exact: false,
         component: TinTucDetail,
+      },
+      {
+        path: "/TinTuc",
+        name: "Tin Tức",
+        exact: false,
+        component: TinTuc,
       },
     {
         path: "*",
