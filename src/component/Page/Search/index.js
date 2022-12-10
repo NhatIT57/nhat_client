@@ -163,7 +163,7 @@ function SanPhamMoi(props) {
   }
 
   return (
-    <div className="search">
+    <div className="searchs">
       <div className="container">
         <form onSubmit={onSubmit} className="mt-4">
           <div className="input-group">

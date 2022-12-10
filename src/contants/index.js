@@ -19,8 +19,9 @@ import QuenMatKhau from './../component/Page/QuenMatKhau/index'
 import XemDonHang from "./../component/Page/XemDonHang/index";
 import Search from "./../component/Page/Search/index";
 import TinTuc from "./../component/Page/TinTuc/TinTuc";
+import TinTucDetail from "./../component/Page/TinTuc/Detail/index";
 
-export const API_ENPOINT = "https://nhat-api.herokuapp.com";
+export const API_ENPOINT = "http://localhost:8080";
 
 export const ROUTESDH = [{
     path: "/DatHang",
@@ -138,9 +139,15 @@ export const ROUTESSTC = [{
       },
       {
         path: "/TinTuc",
-        name: "Tin Tuc",
+        name: "Tin Tức",
         exact: false,
         component: TinTuc,
+      },
+      {
+        path: "/TinTuc/id=:id",
+        name: "Tin Tuc",
+        exact: false,
+        component: TinTucDetail,
       },
     {
         path: "*",

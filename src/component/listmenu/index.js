@@ -25,6 +25,7 @@ function DashBoard(props) {
   const { show, setShow } = useState(false);
   const [tokens, setTokens] = useState(null);
   const [tokenPro, setTokenPro] = useState([]);
+  const [query, setQuery] = useState("");
   const history = useHistory();
   useEffect(() => {
     let current = true;
@@ -157,6 +158,17 @@ function DashBoard(props) {
       history.push("/DangNhap");
     }
   }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    history.push(`/TimKiem/Search=${query}&&Page=${1}`);
+  }
+
+  function onChangSearch(e) {
+    e.persist();
+    setQuery(e.target.value);
+  }
+
   return (
     <div key={name} className="chia" ref={ref}>
         <div className="head">
@@ -524,11 +536,12 @@ function DashBoard(props) {
             </p>
           </div>
           <div className="search">
-            <form action="tim-kiem" method="get" target="_top">
+            <form action="TimKiem/Search=:search" onSubmit={onSubmit} method="get" target="_top">
               <input
                 type="text"
                 name="key"
                 placeholder="Nhập gợi ý từ khóa..."
+                onChange={onChangSearch}
               />
               <input type="submit" defaultValue="Tìm kiếm" />
               <ul className="search_result" />
