@@ -173,7 +173,7 @@ function DashBoard(props) {
     <div key={name} className="chia" ref={ref}>
         <div className="head">
         <div className="container">
-        <h1>Shop Giày Thể Thao - Sneaker Nam, Nữ Replica Đẹp Giá Rẻ</h1>
+        <h1>Shop Giày Thể Thao - Sneaker Nam</h1>
         <div className="texttop">
           <ul className="text">
             <li>
