@@ -127,7 +127,8 @@ function DashBoard(props) {
       let xhtml = null;
       xhtml = ListLoaiGiay.map((route) => {
         return (
-          <li className="nav-item">
+          <li key={route.id} className="nav-item">
+            <Link key={route.id} to={`/ThuongHieu=${route.id}`}>
             <div className="img-menu">
               <img
                 src={`http://localhost:8080/images/${valueImage(
@@ -135,7 +136,6 @@ function DashBoard(props) {
                 )}`}
               ></img>
             </div>
-            <Link key={route.id} to={`/ThuongHieu=${route.id}`}>
               {route.ten_loai_giay}
             </Link>
           </li>
