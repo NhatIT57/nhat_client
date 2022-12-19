@@ -14,7 +14,6 @@ import * as apiImage from "./../../../contants/index";
 import * as apiKM from "./../../../api/khuyen_mai";
 import * as apiQuangCao from "./../../../api/quang_cao";
 import Loadding from "./../../../loadding/index";
-import JoditEditor from 'jodit-react';
 import Moment from "moment";
 function TrangChu(props) {
   const {
@@ -34,13 +33,7 @@ function TrangChu(props) {
   const [dataLG, setDataLg] = useState([]);
   const [dataKM, setDataKM] = useState([]);
   const [dataQuanCao, setDataQuangCao] = useState([]);
-  const editor = useRef(null);
-	const [content, setContent] = useState('');
 
-	const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/,
-    //placeholder: placeholder || 'Start typings...'
-  };
   useEffect(() => {
     let current = true;
     setIsLoadding(true);
@@ -72,7 +65,7 @@ function TrangChu(props) {
     })();
     return () => (current = false);
   }, []);
-  console.log(content)
+
   useEffect(() => {
     const dataTLG = [];
     (async () => {
@@ -100,14 +93,6 @@ function TrangChu(props) {
     } else {
       return (
         <div className="homePage">
-          <JoditEditor
-			ref={editor}
-			value={content}
-			config={config}
-			tabIndex={1} // tabIndex of textarea
-			onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-			onChange={newContent => {}}
-		/>
            <div className="d-flex justify-content-center quangcao"> 
            <OwlCarousel autoplay items={1} className="owl-theme quangcao" loop nav>
               {dataQuanCao && dataQuanCao.map((item)=>{

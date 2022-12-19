@@ -2,7 +2,7 @@ import axios from "axios";
 
 const token = JSON.parse(localStorage.getItem("token"));
 var url_upload = "api/upload";
-var URL = "https://nhat-api.herokuapp.com";
+var URL = "http://localhost:8080";
 
 const authAxios = axios.create({
     baseURL: URL,

@@ -1,0 +1,72 @@
+.newsleft{float: left; width:74%}
+.newsleft .left{width: 60%; float: left;}
+.newsleft .left .img{text-align: center; width: 100%} .newsleft .left img{width: 100%;}
+.newsleft .left h3{font-weight: 600; margin: 10px 0; font-size: 24px; color: #333; line-height: 30px}
+.newsleft .left p{height: 70px; overflow: hidden; line-height: 24px}
+
+.newsleft .right{width: 38%; float: right;}
+.newsleft .right ul li{margin-bottom: 8px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px;}
+.newsleft .right ul li:last-child{border: 0}
+.newsleft .right ul li img{margin-bottom: 10px;}
+.newsleft .right ul li:first-child h3{font-weight: bold; font-size: 18px; line-height: 26px}
+.newsleft .right ul li h3{color: #333; font-size: 16px; line-height: 24px; font-weight: 400}
+
+.boxnews{width: 102%; margin: 0 -1%; margin-top: 20px;}
+.boxnews li{float: left; margin: 0 1%; margin-bottom: 10px; overflow: hidden; padding-bottom: 10px; border-bottom: 1px dashed #ccc;}
+.boxnews li .img{float: left; margin-right: 15px;}
+.boxnews li .img img{height: 160px; width: 220px; border-radius: 3px}
+.boxnews li h3{color: #333; margin:0px 0 10px; font-weight: bold; font-size: 22px; line-height: 30px}
+.boxnews li p{color: #888; font-style: italic; font-size: 14px}
+.boxnews li div{line-height: 24px; margin-top: 10px;}
+
+.newsright{width: 24%; float: right;}
+.titnews{line-height: 26px; font-size: 18px; color: #888; text-transform: uppercase; padding: 0px 0 6px; font-weight: 400; border-bottom: 2px solid #f1f1f1; margin-bottom: 5px;}
+.titnews.blue{color: #288ad6}
+
+.viewsmuch{margin-bottom: 15px;}
+.viewsmuch a{display: block; overflow: hidden; padding: 6px 0}
+.viewsmuch a i{float: left; margin: 5px 10px 0 0; padding: 24px 12px; background: #f4f4f4; font-size: 20px; color: #cbcbcb; font-weight: 600;}
+.viewsmuch a div{display: block; overflow: hidden; line-height: 1.5em;}
+.viewsmuch a h3{height: 50px; overflow: hidden; color: #333}
+.viewsmuch a:hover h3{color: #000}
+// .viewsmuch a span{color: #e77e24; padding-left: 27px; font-size: 14px; background: url(images/eye.svg) no-repeat 0; background-size: 20px; font-style: italic; font-weight: 400;}
+
+.selling{margin-bottom: 15px;}
+.selling li{display: block; overflow: hidden; padding: 10px 0;}
+.selling li .images{float: left; width: 90px; height: 90px; margin-right: 14px; border-radius: 4px}
+.selling li h3{font-weight: 400; font-size: 15px}
+.selling li p{font-size: 15px; margin: 4px 0}
+.selling li p .price{color: #ce671b; margin-right: 5px; font-weight: 400;}
+.selling li p del{color: #888}
+.selling li label{color: #2ba832; font-size: 13px; font-style: italic;}
+.selling li label img{margin-right: 5px; vertical-align: middle;}
+
+.aside{margin-bottom: 15px;} 
+.aside li{float: left; display: block; overflow: hidden; width: 48%; margin-bottom: 15px;}
+.aside li img{display: block; width: 100%; height: 95px; margin-bottom: 10px; border-radius: 3px}
+.aside li h3{display: block; overflow: hidden; line-height: 22px; font-size: 15px; color: #333; height: 70px}
+.aside li:first-child{float: none; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 10px;}
+.aside li:first-child img{height: 215px;}
+.aside li:first-child h3{font-size: 18px; font-weight: 400; height: auto; line-height: 26px}
+.aside li:nth-child(3),.aside li:nth-child(5),.aside li:nth-child(7),.aside li:nth-child(9){float: right;}
+
+@media screen and (max-width: 980px) { 
+.newsleft,.newsright{width: 100%}
+}
+@media screen and (max-width: 768px) { 
+
+}
+@media screen and (max-width: 640px) { 
+
+.newsleft .left,.newsleft .right{width: 100%}
+.newsleft .left{margin-bottom: 15px;}
+.boxnews li .img img{width: 120px; height: 90px}
+.boxnews li h3{font-size: 18px; line-height: 24px; margin-top: 0; margin-bottom: 5px;}
+.boxnews li div{display: none;}
+}
+@media screen and (max-width: 480px) { 
+
+}
+@media screen and (max-width: 414px) { 
+
+}
