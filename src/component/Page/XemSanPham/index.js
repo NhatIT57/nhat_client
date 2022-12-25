@@ -129,10 +129,10 @@ function XemSanPham(props) {
         };
         dataTLG.push(g);
       });
+     
       setData(dataTLG);
       if (dataTLG.length > 0) {
         const d = dataTLG[0].mausac[0].hinh_anh.split(",");
-
         let stemp = null;
         let stemps = 0;
         if (dataKM.length > 0) {

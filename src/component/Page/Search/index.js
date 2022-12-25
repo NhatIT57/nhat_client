@@ -165,7 +165,7 @@ function SanPhamMoi(props) {
   return (
     <div className="searchs">
       <div className="container">
-        <form onSubmit={onSubmit} className="mt-4">
+        {/* <form onSubmit={onSubmit} className="mt-3">
           <div className="input-group">
             <input
               type="text"
@@ -180,7 +180,7 @@ function SanPhamMoi(props) {
               </button>
             </span>
           </div>
-        </form>
+        </form> */}
         <div className="row mt-4">
           {data.length > 0 && data[0].mausac.length > 0 ? (
             data.map((item, index) => {
@@ -192,7 +192,7 @@ function SanPhamMoi(props) {
               return (
                 <div
                   key={item.id}
-                  className="height-margin col-xs-6 col-sm-4 col-md-4 col-lg-4"
+                  className="height-margin col-xs-6 col-sm-6 col-lg-3"
                 >
                   <Link to={`/XemSamPham/${item.id}`} className="title-hp">
                     <div className="one-procuts">

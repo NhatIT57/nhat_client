@@ -4,6 +4,7 @@ import * as giayAPI from "./../../../api/giay";
 import * as apiKM from "./../../../api/khuyen_mai";
 import { Link, useHistory } from "react-router-dom";
 import * as apiGiay from "./../../../api/giay";
+import * as apiMauSac from "./../../../api/mausac";
 import * as apiImage from "../../../contants/index";
 import Pagination from "react-js-pagination";
 import Loadding from "./../../../loadding/index";
@@ -18,6 +19,9 @@ function ThuongHieuTC(props) {
   const history = useHistory();
   const [isActive, setActive] = useState("");
   const [isLoading, setIsLoadding] = useState(false);
+
+  const [mauSac, setMauSac] = useState([]);
+
   const [dataPost, setDataPost] = useState({
     id_loai_giay: 41,
     sortBy: "ten_giay",
@@ -26,7 +30,21 @@ function ThuongHieuTC(props) {
     offset: 0,
   });
 
+  async function getMauSac(){
+    console.log('ss')
+    await apiMauSac.getMauSac().then((res)=>{
+      if(res.data.success === 1){
+        console.log(res)
+        setMauSac(res.data.data)
+      }
+    })
+  }
+  useEffect(()=>{
+    getMauSac();
+  },[])
+
   useEffect(() => {
+    
     if (props.match.params) {
       setDataPost((dataPost) => ({
         ...dataPost,
@@ -47,6 +65,7 @@ function ThuongHieuTC(props) {
               id_loai_giay: parseInt(props.match.params.th),
               sortBy: props.match.params.SortBy,
               groupBy: props.match.params.GroupBy,
+              idMauSac: props?.match?.params?.idMauSac,
               limit: 12,
               offset: pageN,
             })
@@ -60,6 +79,7 @@ function ThuongHieuTC(props) {
                     id_loai_giay: parseInt(props.match.params.th),
                     sortBy: props.match.params.SortBy,
                     groupBy: props.match.params.GroupBy,
+                    idMauSac: props?.match?.params?.idMauSac,
                     limit: 12,
                     offset: pageN,
                   })
@@ -68,6 +88,21 @@ function ThuongHieuTC(props) {
 
                     if (resP.status === 200) {
                       setDataTamAll(dataAll.data);
+                     if( props?.match?.params?.idMauSac){
+                      apiGiay.getProductsPageByLGs({
+                        id_loai_giay: parseInt(props.match.params.th),
+                        sortBy: props.match.params.SortBy,
+                        groupBy: props.match.params.GroupBy,
+                        idMauSac: props?.match?.params?.idMauSac,
+                        limit: 12,
+                        offset: pageN,
+                      }).then((res)=>{
+                        if (res.status === 200) {
+                          setAllPage(res.data.data.length);
+                          setIsLoadding(false);
+                        }
+                      })
+                     }else{
                       apiGiay.getGiay().then((resP) => {
                         const dataLG = resP.data;
                         if (resP.status === 200) {
@@ -80,6 +115,8 @@ function ThuongHieuTC(props) {
                           setIsLoadding(false);
                         }
                       });
+                     }  
+                      
                     }
                   });
               }
@@ -93,6 +130,7 @@ function ThuongHieuTC(props) {
               groupBy: "DESC",
               limit: 12,
               offset: 0,
+              idMauSac: props?.match?.params?.idMauSac,
             })
             .then((res) => {
               const { data } = res;
@@ -105,6 +143,7 @@ function ThuongHieuTC(props) {
                     groupBy: "DESC",
                     limit: 12,
                     offset: 0,
+                    idMauSac: props?.match?.params?.idMauSac,
                   })
                   .then((resP) => {
                     const dataAll = resP.data;
@@ -200,52 +239,52 @@ function ThuongHieuTC(props) {
   function handlePageChange(pageNumber) {
     if (props.match.params.SortBy && props.match.params.page) {
       history.push(
-        `/ThuongHieu=${props.match.params.th}&&SortBy=${props.match.params.SortBy}&&GroupBy=${props.match.params.GroupBy}&&Page=${pageNumber}`
+        `/ThuongHieu=${props.match.params.th}&&SortBy=${props.match.params.SortBy}&&GroupBy=${props.match.params.GroupBy}&&MauSac=${props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${pageNumber}`
       );
     } else {
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"ten_giay"}&&GroupBy=${"DESC"}&&Page=${pageNumber}`
+        }&&SortBy=${"ten_giay"}&&GroupBy=${"DESC"}&&MauSac=${props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${pageNumber}`
       );
     }
   }
 
-  function sortby(data) {
+  function sortby(data, id) {
     if (data === "alpha-asc") {
       setActive("alpha-asc");
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"ten_giay"}&&GroupBy=${"asc"}&&Page=${1}`
+        }&&SortBy=${"ten_giay"}&&GroupBy=${"asc"}&&MauSac=${id?id:props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${1}`
       );
     } else if (data === "alpha-desc") {
       setActive("alpha-desc");
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&Page=${1}`
+        }&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${id?id:props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${1}`
       );
     } else if (data === "date_create-desc") {
       setActive("date_create-desc");
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"date_create"}&&GroupBy=${"desc"}&&Page=${1}`
+        }&&SortBy=${"date_create"}&&GroupBy=${"desc"}&&MauSac=${id?id:props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${1}`
       );
     } else if (data === "price-asc") {
       setActive("price-asc");
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"gia_ban"}&&GroupBy=${"asc"}&&Page=${1}`
+        }&&SortBy=${"gia_ban"}&&GroupBy=${"asc"}&&MauSac=${id?id:props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${1}`
       );
     } else if (data === "price-desc") {
       setActive("price-desc");
       history.push(
         `/ThuongHieu=${
           props.match.params.th
-        }&&SortBy=${"gia_ban"}&&GroupBy=${"desc"}&&Page=${1}`
+        }&&SortBy=${"gia_ban"}&&GroupBy=${"desc"}&&MauSac=${id?id:props.match.params.idMauSac?props.match.params.idMauSac:0}&&Page=${1}`
       );
     }
   }
@@ -260,150 +299,172 @@ function ThuongHieuTC(props) {
     } else {
       return (
         <div className="ThuongHieuTC">
-          <div className="container">
-            <div className="sort-cate clearfix margin-bottom-10 hidden-xs">
-              <div className="sort-cate-left hidden-xs">
-                <h3>Xếp theo:</h3>
-                <ul>
-                  <li
-                    className={`btn-quick-sort alpha-asc`}
-                    className={isActive === "alpha-asc" ? "active" : null}
-                  >
-                    <a onClick={() => sortby("alpha-asc")} title="Tên A-Z">
-                      <i></i>Tên A-Z
-                    </a>
-                  </li>
-                  <li
-                    className="btn-quick-sort alpha-desc"
-                    className={isActive === "alpha-desc" ? "active" : null}
-                  >
-                    <a onClick={() => sortby("alpha-desc")} title="Tên Z-A">
-                      <i></i>Tên Z-A
-                    </a>
-                  </li>
-                  <li
-                    className="btn-quick-sort date_create-desc"
-                    className={
-                      isActive === "date_create-desc" ? "active" : null
-                    }
-                  >
-                    <a
-                      onClick={() => sortby("date_create-desc")}
-                      title="Hàng mới"
+          <div className="ThuongHieuTC_css">
+        
+            <div className="container">
+              <div className="sort-cate clearfix margin-bottom-10 hidden-xs">
+                <div className="sort-cate-left hidden-xs">
+                  <h3>Xếp theo:</h3>
+                  <ul>
+                    <li
+                      className={isActive === "alpha-asc" ? "active btn-quick-sort alpha-asc" : null}
                     >
-                      <i></i>Hàng mới
-                    </a>
-                  </li>
-                  <li
-                    className="btn-quick-sort price-asc"
-                    className={isActive === "price-asc" ? "active" : null}
-                  >
-                    <a
-                      onClick={() => sortby("price-asc")}
-                      title="Giá thấp đến cao"
+                      <a onClick={() => sortby("alpha-asc")} title="Tên A-Z">
+                        <i></i>Tên A-Z
+                      </a>
+                    </li>
+                    <li
+                      className={isActive === "alpha-desc" ? "active btn-quick-sort alpha-desc" : null}
                     >
-                      <i></i>Giá thấp đến cao
-                    </a>
-                  </li>
-                  <li
-                    className="btn-quick-sort price-desc"
-                    className={isActive === "price-desc" ? "active" : null}
-                  >
-                    <a
-                      onClick={() => sortby("price-desc")}
-                      title="Giá cao xuống thấp"
+                      <a onClick={() => sortby("alpha-desc")} title="Tên Z-A">
+                        <i></i>Tên Z-A
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        isActive === "date_create-desc" ? "active btn-quick-sort date_create-desc" : null
+                      }
                     >
-                      <i></i>Giá cao xuống thấp
-                    </a>
-                  </li>
-                </ul>
+                      <a
+                        onClick={() => sortby("date_create-desc")}
+                        title="Hàng mới"
+                      >
+                        <i></i>Hàng mới
+                      </a>
+                    </li>
+                    <li
+                      className={isActive === "price-asc" ? "active btn-quick-sort price-asc" : null}
+                    >
+                      <a
+                        onClick={() => sortby("price-asc")}
+                        title="Giá thấp đến cao"
+                      >
+                        <i></i>Giá thấp đến cao
+                      </a>
+                    </li>
+                    <li
+                      className={isActive === "price-desc" ? "active btn-quick-sort price-desc" : null}
+                    >
+                      <a
+                        onClick={() => sortby("price-desc")}
+                        title="Giá cao xuống thấp"
+                      >
+                        <i></i>Giá cao xuống thấp
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="sort-cate-left hidden-xs">
+                  <h3>Màu sắc:</h3>
+                  <ul>
+                  {
+                    mauSac.map((item, index)=>{
+                      return <li
+                      className={props?.match?.params?.idMauSac == item.id ? "active btn-quick-sort price-desc" : null}
+                    >
+                      <a
+                        onClick={() =>{sortby("price-desc", item.id)}}
+                        title={item.ten_mau_sac}
+                      >
+                        <i></i>{item.ten_mau_sac}
+                        <img className="imgMauSac" width={'20px'} height={'20px'} src={`http://localhost:8080/images/${item.hinh_anh}`}></img>
+                      </a>
+                    </li>
+                    })
+                  }
+
+                  </ul>
+                </div>
+              
               </div>
-            </div>
-            <div className="row">
-              {data.length > 0 && data[0].mausac.length > 0 ? (
-                data.map((item, index) => {
-                  const d = item.mausac[0].hinh_anh.split(",");
-                  let arr = [];
-                  for (var i = 0; i < d.length; i++) {
-                    arr.push(d[i]);
-                  }
-                  let stemp = null;
-                  let stemps = 0;
-                  if (dataKM.length > 0) {
-                    const filter = dataKM.filter((items) => items.id_giay === item.id);
-    
-                    if (filter.length > 0) {
-                      stemp = filter[0].phan_tram;
-                    } else {
-                      stemp = null;
+              <div className="row">
+                {data.length > 0 && data[0].mausac.length > 0 ? (
+                  data.map((item, index) => {
+                    const d = item?.mausac[0]?.hinh_anh.split(",");
+                    let arr = [];
+                    if(d?.length){
+                      for (var i = 0; i < d.length; i++) {
+                        arr.push(d[i]);
+                      }
                     }
-                  }
-                  if (stemp) {
-                    stemps =
-                      stemp !== null
-                        ? item.gia_ban - (item.gia_ban * stemp) / 100
-                        : 0;
-                  }
+                    let stemp = null;
+                    let stemps = 0;
+                    if (dataKM.length > 0) {
+                      const filter = dataKM.filter((items) => items.id_giay === item.id);
+      
+                      if (filter.length > 0) {
+                        stemp = filter[0].phan_tram;
+                      } else {
+                        stemp = null;
+                      }
+                    }
+                    if (stemp) {
+                      stemps =
+                        stemp !== null
+                          ? item.gia_ban - (item.gia_ban * stemp) / 100
+                          : 0;
+                    }
 
-                  return (
-                    <div
-                      key={item.id}
-                      className="height-margin col-xs-6 col-sm-4 col-md-4 col-lg-4"
-                    >
-                      <Link to={`/XemSamPham/${item.id}`} className="title-hp">
-                        <div className="one-procuts">
-                          <div className="width-image">
-                            <img
-                              className="img"
-                              src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
-                            />
-                          </div>
+                    return (
+                      <div
+                        key={item.id}
+                        className="height-margin col-xs-6 col-sm-4 col-md-4 col-lg-4"
+                      >
+                        <Link to={`/XemSamPham/${item.id}`} className="title-hp">
+                          <div className="one-procuts">
+                            <div className="width-image">
+                              <img
+                                className="img"
+                                src={`${apiImage.API_ENPOINT}/images/${arr[0]}`}
+                              />
+                            </div>
 
-                          <div className="name-price">
-                            <div className="name-product">
-                              {data[0].ten_giay}
-                            </div>
-                            <div
-                              className={
-                                stemps !== 0
-                                  ? `price-product amount`
-                                  : ` price-product`
-                              }
-                            >
-                              {`${data[0].gia_ban
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
-                            </div>
-                            <div className={` price-product`}>
-                              {stemps ? (
-                                `${stemps
+                            <div className="name-price">
+                              <div className="name-product">
+                                {data[0].ten_giay}
+                              </div>
+                              <div
+                                className={
+                                  stemps !== 0
+                                    ? `price-product amount`
+                                    : ` price-product`
+                                }
+                              >
+                                {`${data[0].gia_ban
                                   .toString()
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`
-                              ) : (
-                                <></>
-                              )}
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}
+                              </div>
+                              <div className={` price-product`}>
+                                {stemps ? (
+                                  `${stemps
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })
-              ) : (
-                <div></div>
-              )}
-            </div>
-            <div className="col-sm-12">
-              <div className="pagination">
-                <Pagination
-                  prevPageText="prev"
-                  nextPageText="next"
-                  activePage={activePage}
-                  itemsCountPerPage={12}
-                  totalItemsCount={allPage}
-                  pageRangeDisplayed={12}
-                  onChange={handlePageChange}
-                />
+                        </Link>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div></div>
+                )}
+              </div>
+              <div className="col-sm-12">
+                <div className="pagination">
+                  <Pagination
+                    prevPageText="prev"
+                    nextPageText="next"
+                    activePage={activePage}
+                    itemsCountPerPage={12}
+                    totalItemsCount={allPage}
+                    pageRangeDisplayed={12}
+                    onChange={handlePageChange}
+                  />
+                </div>
               </div>
             </div>
           </div>

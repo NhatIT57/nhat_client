@@ -124,6 +124,10 @@ export const getProductsPageByLG = (data) => {
     return authAxios.post(`/api/giay/newProductsAllPage`, data);
 };
 
+export const getProductsPageByLGs = (data) => {
+    return authAxios.post(`/api/giay/newProductsAllPages`, data);
+};
+
 export const getProductLG = () => {
     return authAxios.get(`/api/giay/productLG`);
 };

@@ -146,8 +146,10 @@ function DashBoard(props) {
     }
   }
   function deleteLocal() {
+    console.log('ss')
     localStorage.removeItem("tokenTC");
     setTokens(null);
+    history.push("/DangKy");
   }
 
   function showModals() {
@@ -176,9 +178,6 @@ function DashBoard(props) {
         <h1>Shop Giày Thể Thao - Sneaker Nam</h1>
         <div className="texttop">
           <ul className="text">
-            <li>
-              <p>Free ship</p> <span>Toàn quốc</span>
-            </li>
             <li>
               <p>Check hàng</p> <span>Mới thanh toán</span>
             </li>
@@ -462,11 +461,9 @@ function DashBoard(props) {
               </p>
             </Link>
             <ul>
-                <li>
-                </li>
-                <li>
+                <li onClick={()=>deleteLocal()}>
                   {tokens !== null ? (
-                    <a rel="nofollow" title="Đăng ký" onClick={deleteLocal}>
+                    <a rel="nofollow" title="Đăng ký" >
                       Đăng xuất
                     </a>
                   ) : (
@@ -487,54 +484,7 @@ function DashBoard(props) {
               <Link href="/DangNhap" title="Đăng ký & tạo tài khoản" />
             </p>
           </div>
-          <div className="feedback">
-            <a href="hinh-anh-feedback" title="Hình ảnh feedback">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                viewBox="0 0 512 512"
-                style={{ enableBackground: "new 0 0 512 512" }}
-                xmlSpace="preserve"
-              >
-                <g>
-                  <g>
-                    <path d="M494.933,38.4h-409.6c-9.412,0-17.067,7.654-17.067,17.067v17.067H51.2c-9.412,0-17.067,7.654-17.067,17.067v17.067    H17.067C7.654,106.667,0,114.321,0,123.733v332.8c0,9.412,7.654,17.067,17.067,17.067h409.6c9.412,0,17.067-7.654,17.067-17.067    v-17.067H460.8c9.412,0,17.067-7.654,17.067-17.067v-17.067h17.067c9.412,0,17.067-7.654,17.067-17.067v-332.8    C512,46.054,504.346,38.4,494.933,38.4z M17.067,123.733h409.6l0.009,190.635l-44.783-51.183c-3.251-3.721-9.6-3.721-12.851,0    l-54.067,61.79L167.799,194.159c-3.234-2.884-8.098-2.884-11.332,0L17.067,318.071V123.733z M426.684,431.01v25.523H17.067V340.89    l145.067-128.947l147.934,131.49c1.69,1.51,3.942,2.193,6.204,2.142c2.278-0.145,4.395-1.186,5.888-2.901l53.308-60.911    l51.209,58.53l0.008,90.573c0,0.017-0.017,0.043-0.017,0.068S426.684,430.985,426.684,431.01z M460.8,422.4h-17.067V123.733    c0-9.412-7.654-17.067-17.067-17.067H51.2V89.6h409.6V422.4z M494.933,388.267h-17.067V89.6c0-9.412-7.654-17.067-17.067-17.067    H85.333V55.467h409.6V388.267z" />
-                  </g>
-                </g>
-                <g>
-                  <g>
-                    <path d="M307.2,174.933c-18.825,0-34.133,15.309-34.133,34.133S288.375,243.2,307.2,243.2s34.133-15.309,34.133-34.133    S326.025,174.933,307.2,174.933z M307.2,226.133c-9.412,0-17.067-7.654-17.067-17.067c0-9.412,7.654-17.067,17.067-17.067    s17.067,7.654,17.067,17.067C324.267,218.479,316.612,226.133,307.2,226.133z" />
-                  </g>
-                </g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-                <g></g>
-              </svg>
-              <span>Hình ảnh Feedback</span>
-              <p className="capdo">
-                <i>của khách hàng</i>
-              </p>
-            </a>
-            <p>
-              <a href="hinh-anh-feedback" title="Hình ảnh feedback" />
-            </p>
-          </div>
+         
           <div className="search">
             <form action="TimKiem/Search=:search" onSubmit={onSubmit} method="get" target="_top">
               <input

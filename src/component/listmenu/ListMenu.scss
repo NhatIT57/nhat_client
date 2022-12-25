@@ -17,7 +17,7 @@
 // }
 
 .logo img {
-    height: 100px;
+    height: 80px;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;
@@ -47,7 +47,7 @@
     display: none;
     top: 56px;
     left: 0;
-    z-index: 2;
+    z-index: 10000;
     background: #fff;
     width: 100%;
     min-width: 200px;
@@ -137,11 +137,9 @@
     width: 30%;
 }
 
-.nav-evo-watch {
-    margin-top: 50px;
-}
 .background_css{
     background: linear-gradient(to bottom,#242428 10%,#38383e 44%,#38383e 100%);
+    margin-top: 5px;
 }
 
 .backgroundFixed_css {
@@ -258,7 +256,7 @@ position: fixed;
     //     display: flex;
     // }
     .logo img {
-        height: 100%;
+        height: 80px;
     }
     .dk-acoount {
         width: 25% !important;
@@ -564,29 +562,37 @@ svg#Layer_1{
     border-radius: 4px;
 }
 
+
+ul{
+    margin-bottom: 0px !important;
+}
+
+.iconMenu {
+    display: none;
+}
 @media screen and (min-width: 70px)and(max-width: 1040px) {
     .title-account,
     .title-giohang {
         display: none;
     }
-    .container {
-        width: 100%;
-        position: relative;
+    .container, .container-md, .container-sm {
+        width: 100% !important;
+        max-width: 100% !important;
     }
     .header-CT {
         width: 100%;
     }
     .logo img {
-        height: 100px;
-    }
-    .nav-evo-watch {
-        margin-top: 20px;
+        height: 80px;
     }
     .row-menu button#dropdown-basic {
         font-size: 18px;
     }
     .nav .nav-item a {
         font-size: 16px;
+    }
+    .container, .container-md, .container-sm{
+        width: 100% !important;
     }
 }
 

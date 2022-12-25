@@ -4,6 +4,7 @@ import * as apiImage from './../../../../contants/index';
 function SelectFast(props) {
 	const [fast, setFast] = useState('');
 	const { arrFast, dataSubmits } = props;
+	
 	function onChangeValue(e) {
 		setFast(e.target.value);
 		arrFast.map((arr, index) => {
@@ -12,6 +13,7 @@ function SelectFast(props) {
 			}
 		});
 	}
+
 	useEffect(() => {
 		setFast(dataSubmits.ten_mau_sac);
 	}, []);

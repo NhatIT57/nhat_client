@@ -143,6 +143,12 @@ ul {
     height: 224.66px;
     object-fit: contain;
 }
+.ThuongHieuTC .imgMauSac{
+    width: 15px !important;
+    height: 15px !important;
+    margin-left: 3px;
+    object-fit: cover;
+}
 
 @media screen and (min-width: 1px) and (max-width: 739px) {
     .sort-cate .sort-cate-left ul li {

@@ -39,7 +39,7 @@ export const ROUTESSTC = [
   },
 
   {
-    path: "/ThuongHieu=:th&&SortBy=:SortBy&&GroupBy=:GroupBy&&Page=:page",
+    path: "/ThuongHieu=:th&&SortBy=:SortBy&&GroupBy=:GroupBy&&MauSac=:idMauSac&&Page=:page",
     exact: false,
     component: ThuongHieuTC,
   },

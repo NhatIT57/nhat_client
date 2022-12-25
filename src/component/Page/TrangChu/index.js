@@ -93,7 +93,7 @@ function TrangChu(props) {
     } else {
       return (
         <div className="homePage">
-           <div className="d-flex justify-content-center quangcao"> 
+           <div className="quangcao"> 
            <OwlCarousel autoplay items={1} className="owl-theme quangcao" loop nav>
               {dataQuanCao && dataQuanCao.map((item)=>{
                 return  <div key={item.id} className="img-banner">
@@ -108,7 +108,7 @@ function TrangChu(props) {
                   Sản Phẩm mới
                 </Link>
               </div>
-              <OwlCarousel items={3} className="owl-theme" loop nav margin={8}>
+              <OwlCarousel items={4} className="owl-theme" loop nav margin={8}>
                 {giayNP.length > 0 ? (
                   giayNP.map((item, index) => {
                     const data = mausacNP.filter((i) => i.id_giay === item.id);
@@ -270,7 +270,7 @@ function TrangChu(props) {
                     </Link>
                   </div>
                   <OwlCarousel
-                    items={3}
+                    items={4}
                     className="owl-theme"
                     loop
                     nav
