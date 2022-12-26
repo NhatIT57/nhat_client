@@ -63,6 +63,7 @@
 
 .ThuongHieuTC {
     margin: 30px 0;
+    margin-top: 5px;
 }
 
 .sort-cate {
@@ -141,7 +142,7 @@ ul {
 
 .ThuongHieuTC img{
     height: 224.66px;
-    object-fit: contain;
+    object-fit: cover;
 }
 .ThuongHieuTC .imgMauSac{
     width: 15px !important;
@@ -150,6 +151,43 @@ ul {
     object-fit: cover;
 }
 
+.shopee-filter-group {
+    padding: 1.25rem 0;
+    display: flex;
+}
+
+.shopee-filter-group__header.shopee-price-range-filter__header{
+    height: 30px;
+    margin-right: 10px;
+}
+
+.shopee-price-range-filter__inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+}
+.shopee-price-range-filter__range-line {
+    flex: 1;
+    height: 1px;
+    background: #bdbdbd;
+    margin: 0 0.625rem;
+    height: 30px;
+}
+.shopee-price-range-filter--vn .shopee-price-range-filter__input {
+    width: 100px;
+    font-size: 15px;
+    border: 1px solid rgba(0,0,0,.09);
+    padding: 5px 5px;
+}
+button.shopee-button-solid.shopee-button-solid--primary.ubfyUF{
+    background-color: rgb(238, 77, 45);
+    height: 30px;
+    padding: 5px 20px;
+    margin-left: 10px;
+    border-radius: 4px;
+    color: white;
+}
 @media screen and (min-width: 1px) and (max-width: 739px) {
     .sort-cate .sort-cate-left ul li {
         width: 50%;

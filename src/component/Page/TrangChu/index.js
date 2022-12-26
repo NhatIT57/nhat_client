@@ -178,23 +178,6 @@ function TrangChu(props) {
                 </Link>
               </div>
             </div>
-            {/* <div className="row">
-              <div className="col-sm-4">
-                <div className="fs4 fw-bold">Thương hiệu</div>
-                <div className="checkbox">
-                  <ol className="items am-filter-items-attr_brand_id mt-2">
-                   {dataLG.length>0?dataLG.map((item, index)=>{
-                     return  <li>
-                     <a href="" className="d-flex align-items-center">
-                         <input type="checkbox" className="mr-2" onChange={onChangeCheckBox}/>
-                         <div>{`${item.ten_loai_giay} (${item.so_luong})`}</div>
-                     </a>
-                   </li>
-                   }):null}
-                    </ol>
-                </div>
-              </div>
-            </div> */}
             <div className="th-prodcut mt-5">
           {ListLoaiGiay.length > 0 &&
           dataLGS.length > 0 &&

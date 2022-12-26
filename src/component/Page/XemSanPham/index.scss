@@ -157,7 +157,7 @@ input:checked+label .img-check {
 
 .owl-carousel .owl-item img {
     width: 100% !important;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 @media screen and (min-width: 1px) and (max-width: 739px) {
@@ -168,6 +168,6 @@ input:checked+label .img-check {
         width: 100px !important;
         height:  100px !important;
         padding: 0 5px !important;
-        object-fit: contain;
+        object-fit: cover;
     }
 }
