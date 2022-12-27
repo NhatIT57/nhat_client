@@ -399,6 +399,31 @@ function ThuongHieuTC(props) {
             : 0
         }&&Page=${1}`
       );
+    }else{
+      setActive("alpha-desc");
+      history.push(
+        `/ThuongHieu=${
+          props.match.params.th
+        }&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${
+          id
+            ? id
+            : props.match.params.idMauSac
+            ? props.match.params.idMauSac
+            : 0
+        }&&From=${
+          tu
+            ? tu
+            : props.match.params.from
+            ? props.match.params.from
+            : 0
+        }&&To=${
+          den
+            ? den
+            : props.match.params.to
+            ? props.match.params.to
+            : 0
+        }&&Page=${1}`
+      );
     }
   }
 
@@ -498,7 +523,7 @@ function ThuongHieuTC(props) {
                         >
                           <a
                             onClick={() => {
-                              sortby("price-desc", item.id);
+                              sortby(isActive, item.id);
                             }}
                             title={item.ten_mau_sac}
                           >
