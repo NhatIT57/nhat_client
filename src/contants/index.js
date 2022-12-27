@@ -33,6 +33,11 @@ export const ROUTESDH = [
 
 export const ROUTESSTC = [
   {
+    path: "/SortBy=:SortBy&&GroupBy=:GroupBy&&MauSac=:idMauSac&&From=:from&&To=:to&&Page=:page",
+    exact: false,
+    component: TrangChu,
+  },
+  {
     path: "/",
     exact: true,
     component: TrangChu,

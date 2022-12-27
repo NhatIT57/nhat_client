@@ -95,12 +95,10 @@ function TrangChu(props) {
                   })
                   .then((resP) => {
                     const dataAll = resP.data;
-
                     if (resP.status === 200) {
                       setDataTamAll(dataAll.data);
                       if (
-                        props?.match?.params?.idMauSac &&
-                        parseInt(props?.match?.params?.idMauSac)
+                       ( props?.match?.params?.idMauSac && parseInt(props?.match?.params?.idMauSac) !== 0) || ( props?.match?.params?.to && parseInt(props?.match?.params?.to)!== 0) 
                       ) {
                         apiGiay
                           .getProductsPageByLGs({
@@ -120,14 +118,8 @@ function TrangChu(props) {
                           });
                       } else {
                         apiGiay.getGiay().then((resP) => {
-                          const dataLG = resP.data;
                           if (resP.status === 200) {
-                            const dataG = dataLG.data.filter(
-                              (item) =>
-                                item.id_loai_giay ===
-                                parseInt(props.match.params.th)
-                            );
-                            setAllPage(dataG.length);
+                            setAllPage(resP.data.data.length);
                             setIsLoadding(false);
                           }
                         });
@@ -169,12 +161,8 @@ function TrangChu(props) {
               }
             });
           apiGiay.getGiay().then((resP) => {
-            const dataLG = resP.data;
             if (resP.status === 200) {
-              const dataG = dataLG.data.filter(
-                (item) => item.id_loai_giay === parseInt(props.match.params.th)
-              );
-              setAllPage(dataG.length);
+              setAllPage(resP.data.data.length);
             }
           });
         }
@@ -419,6 +407,7 @@ function TrangChu(props) {
       );
     }
   }
+ 
   function renderContent() {
     if (isLoading) {
       return (

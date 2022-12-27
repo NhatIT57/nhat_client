@@ -106,6 +106,7 @@ function ThuongHieuTC(props) {
                           })
                           .then((res) => {
                             if (res.status === 200) {
+                              console.log(res.data)
                               setAllPage(res.data.data.length);
                               setIsLoadding(false);
                             }
@@ -175,9 +176,10 @@ function ThuongHieuTC(props) {
 
       fetchPostsLists();
     }
-    apiKM
-      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD") })
+     apiKM
+      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD HH:mm") })
       .then((res) => {
+        console.log(res)
         const { data } = res;
         if (res.status === 200) {
           setDataKM(data.data);
@@ -244,7 +246,7 @@ function ThuongHieuTC(props) {
     }
     return () => (current = false);
   }, [dataTam, dataTamAll]);
-
+    
   function handlePageChange(pageNumber) {
     if (props.match.params.SortBy && props.match.params.page) {
       history.push(
