@@ -163,7 +163,7 @@ function DashBoard(props) {
 
   function onSubmit(e) {
     e.preventDefault();
-    history.push(`/TimKiem/Search=${query}&&Page=${1}`);
+    history.push(`/TimKiem/Search=${query}&&SortBy=ten_giay&&GroupBy=desc&&MauSac=0&&From=0&&To=0&&Page=1`);
   }
 
   function onChangSearch(e) {

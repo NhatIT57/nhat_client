@@ -130,7 +130,7 @@ export const ROUTESSTC = [
     component: XemSanPham,
   },
   {
-    path: "/TimKiem/Search=:search&&Page=:page",
+    path: "/TimKiem/Search=:search&&SortBy=:SortBy&&GroupBy=:GroupBy&&MauSac=:idMauSac&&From=:from&&To=:to&&Page=:page",
     exact: false,
     component: Search,
   },
