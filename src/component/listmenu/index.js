@@ -204,7 +204,7 @@ function DashBoard(props) {
             </li>
             <li>
               <Link
-                to="/khuyen-mai"
+                to="/KhuyenMai"
                 title="Cập nhật các tin khuyến mãi - Sale cực khủng về Sneaker"
               >
                 <div className="img">

@@ -171,8 +171,9 @@ function TrangChu(props) {
       fetchPostsLists();
     }
     apiKM
-      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD") })
+      .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD HH:mm") })
       .then((res) => {
+        console.log(res)
         const { data } = res;
         if (res.status === 200) {
           setDataKM(data.data);

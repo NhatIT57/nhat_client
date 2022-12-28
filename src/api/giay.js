@@ -52,6 +52,11 @@ export const getGiay = () => {
     return authAxios.get(`/api/giay`);
 };
 
+export const getAllKM = () => {
+    return authAxios.get(`/api/giay/getAllKM`);
+};
+
+
 export const updateGiay = (data) => {
     return authAxios.patch(`/api/giay`, data);
 };

@@ -20,6 +20,8 @@ import XemDonHang from "./../component/Page/XemDonHang/index";
 import Search from "./../component/Page/Search/index";
 import TinTuc from "./../component/Page/TinTuc/TinTuc";
 import TinTucDetail from "./../component/Page/TinTuc/Detail/index";
+import KhuyenMai from "./../component/Page/KhuyenMaiNow/index";
+
 
 export const API_ENPOINT = "http://localhost:8080";
 
@@ -42,7 +44,11 @@ export const ROUTESSTC = [
     exact: true,
     component: TrangChu,
   },
-
+  {
+    path: "/KhuyenMai",
+    exact: true,
+    component: KhuyenMai,
+  },
   {
     path: "/ThuongHieu=:th&&SortBy=:SortBy&&GroupBy=:GroupBy&&MauSac=:idMauSac&&From=:from&&To=:to&&Page=:page",
     exact: false,
