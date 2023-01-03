@@ -55,6 +55,8 @@ function TrangChu(props) {
   }, []);
 
   useEffect(() => {
+    settu(props?.match?.params?.from && props?.match?.params?.from);
+    setden(props?.match?.params?.to && props?.match?.params?.to);
     if (props.match.params) {
       setDataPost((dataPost) => ({
         ...dataPost,
@@ -72,7 +74,7 @@ function TrangChu(props) {
           giayAPI
             .getProductsPageByLG({
               sortBy: props.match.params.SortBy,
-              search: props.match.params.SortBy,
+              search: props.match.params.search,
               groupBy: props.match.params.GroupBy,
               idMauSac: props?.match?.params?.idMauSac,
               to: props?.match?.params?.to,
@@ -83,11 +85,22 @@ function TrangChu(props) {
             .then((res) => {
               const { data } = res;
               if (res.status === 200) {
+                if(data.data.length > 0){
+                  if(parseInt(props?.match?.params?.to) > 0 && parseInt(props?.match?.params?.to) > 0){
+                    localStorage.setItem('gia', JSON.stringify({from: parseInt(props?.match?.params?.from), to: parseInt(props?.match?.params?.to)}));
+                  }
+                  if(props?.match?.params?.idMauSac && parseInt(props?.match?.params?.idMauSac)>0){
+                    localStorage.setItem('idMauSac', JSON.stringify(parseInt(props?.match?.params?.idMauSac)));
+                  }
+                  if(props.match.params.search){
+                    localStorage.setItem('search', JSON.stringify(props.match.params.search));
+                  }
+                }
                 setDataTam(data.data);
                 giayAPI
                   .productsAllByLG({
                     sortBy: props.match.params.SortBy,
-                     search: props.match.params.SortBy,
+                     search: props.match.params.search,
                     groupBy: props.match.params.GroupBy,
                     idMauSac: props?.match?.params?.idMauSac,
                     to: props?.match?.params?.to,
@@ -147,7 +160,6 @@ function TrangChu(props) {
                 setDataTam(data.data);
                 giayAPI
                   .productsAllByLG({
-
                     sortBy: "ten_giay",
                     groupBy: "DESC",
                     limit: 12,
@@ -246,7 +258,7 @@ function TrangChu(props) {
   function handlePageChange(pageNumber) {
     if (props.match.params.SortBy && props.match.params.page) {
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${props.match.params.SortBy
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${props.match.params.SortBy
         }&&GroupBy=${props.match.params.GroupBy}&&MauSac=${props.match.params.idMauSac ? props.match.params.idMauSac : 0
         }&&From=${props.match.params.from ? props.match.params.from : 0
         }&&To=${props.match.params.to ? props.match.params.to : 0
@@ -254,7 +266,7 @@ function TrangChu(props) {
       );
     } else {
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"DESC"}&&MauSac=${props.match.params.idMauSac ? props.match.params.idMauSac : 0
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"DESC"}&&MauSac=${props.match.params.idMauSac ? props.match.params.idMauSac : 0
         }&&From=${props.match.params.from ? props.match.params.from : 0
         }&&To=${props.match.params.to ? props.match.params.to : 0
         }&&Page=${pageNumber}`
@@ -266,7 +278,7 @@ function TrangChu(props) {
     if (data === "alpha-asc") {
       setActive("alpha-asc");
       history.push(
-        `//Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"asc"}&&MauSac=${id
+        `//TimKiem/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"asc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac
@@ -286,7 +298,7 @@ function TrangChu(props) {
     } else if (data === "alpha-desc") {
       setActive("alpha-desc");
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${id
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac
@@ -306,7 +318,7 @@ function TrangChu(props) {
     } else if (data === "date_create-desc") {
       setActive("date_create-desc");
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"date_create"}&&GroupBy=${"desc"}&&MauSac=${id
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"date_create"}&&GroupBy=${"desc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac
@@ -326,7 +338,7 @@ function TrangChu(props) {
     } else if (data === "price-asc") {
       setActive("price-asc");
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"gia_ban"}&&GroupBy=${"asc"}&&MauSac=${id
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"gia_ban"}&&GroupBy=${"asc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac
@@ -346,7 +358,7 @@ function TrangChu(props) {
     } else if (data === "price-desc") {
       setActive("price-desc");
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"gia_ban"}&&GroupBy=${"desc"}&&MauSac=${id
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"gia_ban"}&&GroupBy=${"desc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac
@@ -366,7 +378,7 @@ function TrangChu(props) {
     } else {
       setActive("alpha-desc");
       history.push(
-        `/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${id
+        `/TimKiem/Search=${props.match.params.search}&&SortBy=${"ten_giay"}&&GroupBy=${"desc"}&&MauSac=${id
           ? id
           : props.match.params.idMauSac
             ? props.match.params.idMauSac

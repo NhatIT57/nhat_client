@@ -31,7 +31,7 @@ function ModalProduct(props) {
   }, [token]);
 
   useEffect(() => {
-    if (dataKM.length > 0) {
+    if (dataKM && dataKM.length > 0) {
       setIsKM(true);
     }
   }, [dataKM]);

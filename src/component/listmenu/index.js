@@ -124,7 +124,7 @@ function DashBoard(props) {
   }
 
   function dropLoaiGiays() {
-    if (ListLoaiGiay.length > 0) {
+    if (ListLoaiGiay && ListLoaiGiay.length > 0) {
       let xhtml = null;
       xhtml = ListLoaiGiay.map((route) => {
         return (
@@ -178,10 +178,10 @@ function DashBoard(props) {
         <h1>Shop Giày Thể Thao - Sneaker Nam</h1>
         <div className="texttop">
           <ul className="text">
-            <li>
+            <li className="cursor" onClick={()=> history.push(`/TraCuuDonHang`)}>
               <p>Check hàng</p> <span>Mới thanh toán</span>
             </li>
-            <li>
+            <li className="cursor" onClick={()=> history.push(`/ChinhSachBaoHanh`)}> 
               <p>Bảo hành</p> <span>Trong 6 tháng</span>
             </li>
           </ul>

@@ -17,9 +17,10 @@
 // }
 
 .logo img {
-    height: 80px;
+    height: 100px;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
     cursor: pointer;
 }
 
@@ -188,18 +189,21 @@ position: fixed;
 }
 
 .footer-TC {
-    margin: 30px 0;
-    background-color: #f9f9f9;
+    margin-top: 30px;
+    background-color: #222;
+    padding: 20px 0px;
 }
 
 .title-huongdan {
-    font-size: 18px;
+    font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 1.4px;
     line-height: 22px;
     font-weight: bold;
     margin-bottom: 15px;
     padding-top: 10px;
+    color: white;
+  
 }
 
 .list-huongdan {
@@ -209,16 +213,17 @@ position: fixed;
 
 .list-huongdan li {
     padding: 5px 0;
+    width: 100%;
 }
 
 .list-huongdan a {
     font-size: 14px;
-    color: black;
+    color: white;
 }
 
 .list-huongdan a:hover {
     text-decoration: none;
-    color: #333;
+    color: white;
 }
 
 .dislay-center {
@@ -227,6 +232,15 @@ position: fixed;
 
 .huongdan {
     margin: 0 auto;
+}
+
+
+.dislayEnd{
+    display: flex;
+    justify-content: end;
+}
+.dislayEnd .huongdan {
+    margin: 0 unset;
 }
 
 @media screen and (min-width: 1px)and(max-width: 739px) {
@@ -255,6 +269,7 @@ position: fixed;
     // }
     .logo img {
         height: 80px;
+        width: 100%;
     }
     .dk-acoount {
         width: 25% !important;
@@ -420,6 +435,8 @@ img:not(.initial) {
     margin-top: -10px;
     position: relative;
     overflow: hidden;
+    width: 300px;
+    height: 100px;
 }
 
 header .logo img {
@@ -568,6 +585,9 @@ ul{
 .iconMenu {
     display: none;
 }
+.cursor{
+    cursor: pointer;
+}
 @media screen and (min-width: 70px)and(max-width: 1040px) {
     .title-account,
     .title-giohang {
@@ -581,7 +601,7 @@ ul{
         width: 100%;
     }
     .logo img {
-        height: 80px;
+        height: 100px;
     }
     .row-menu button#dropdown-basic {
         font-size: 18px;

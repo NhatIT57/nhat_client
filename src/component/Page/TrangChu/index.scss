@@ -64,6 +64,9 @@
 .ThuongHieuTC {
     margin: 30px 0;
     margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 
 .sort-cate {

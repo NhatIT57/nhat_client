@@ -43,6 +43,8 @@ function ThuongHieuTC(props) {
   }, []);
 
   useEffect(() => {
+    settu(props?.match?.params?.from && props?.match?.params?.from);
+    setden(props?.match?.params?.to && props?.match?.params?.to);
     if (props.match.params) {
       setDataPost((dataPost) => ({
         ...dataPost,

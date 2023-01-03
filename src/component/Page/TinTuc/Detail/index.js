@@ -17,8 +17,6 @@ const TinTucDetail = (props) => {
     loadData();
   }, []);
 
-  console.log(data);
-
   return (
     <div className="container">
       <div class="padmb">

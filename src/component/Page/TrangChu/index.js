@@ -55,6 +55,8 @@ function TrangChu(props) {
   }, []);
 
   useEffect(() => {
+    settu(props?.match?.params?.from && props?.match?.params?.from);
+    setden(props?.match?.params?.to && props?.match?.params?.to);
     if (props.match.params) {
       setDataPost((dataPost) => ({
         ...dataPost,
@@ -83,6 +85,14 @@ function TrangChu(props) {
               const { data } = res;
               if (res.status === 200) {
                 setDataTam(data.data);
+                if(data.data.length > 0){
+                  if(parseInt(props?.match?.params?.to) > 0 && parseInt(props?.match?.params?.to) > 0){
+                    localStorage.setItem('gia', JSON.stringify({from: parseInt(props?.match?.params?.from), to: parseInt(props?.match?.params?.to)}));
+                  }
+                  if(props?.match?.params?.idMauSac && parseInt(props?.match?.params?.idMauSac)>0){
+                    localStorage.setItem('idMauSac', JSON.stringify(parseInt(props?.match?.params?.idMauSac)));
+                  }
+                }
                 giayAPI
                   .productsAllByLG({
                     sortBy: props.match.params.SortBy,
@@ -97,6 +107,14 @@ function TrangChu(props) {
                     const dataAll = resP.data;
                     if (resP.status === 200) {
                       setDataTamAll(dataAll.data);
+                      if(data.data.length > 0){
+                        if(parseInt(props?.match?.params?.to) > 0 && parseInt(props?.match?.params?.to) > 0){
+                          localStorage.setItem('gia', JSON.stringify({from: parseInt(props?.match?.params?.from), to: parseInt(props?.match?.params?.to)}));
+                        }
+                        if(props?.match?.params?.idMauSac && parseInt(props?.match?.params?.idMauSac)>0){
+                          localStorage.setItem('idMauSac', JSON.stringify(parseInt(props?.match?.params?.idMauSac)));
+                        }
+                      }
                       if (
                        ( props?.match?.params?.idMauSac && parseInt(props?.match?.params?.idMauSac) !== 0) || ( props?.match?.params?.to && parseInt(props?.match?.params?.to)!== 0) 
                       ) {
@@ -173,7 +191,6 @@ function TrangChu(props) {
     apiKM
       .getNow({ date_now: Moment(Date()).format("YYYY-MM-DD HH:mm") })
       .then((res) => {
-        console.log(res)
         const { data } = res;
         if (res.status === 200) {
           setDataKM(data.data);
@@ -503,7 +520,7 @@ function TrangChu(props) {
                 <div className="sort-cate-left hidden-xs">
                   <h3>Màu sắc:</h3>
                   <ul>
-                    {mauSac.map((item, index) => {
+                    {mauSac && mauSac?.map((item, index) => {
                       return (
                         <li
                           className={
@@ -884,6 +901,7 @@ function TrangChu(props) {
       );
     }
   }
+
   return renderContent();
 }
 
