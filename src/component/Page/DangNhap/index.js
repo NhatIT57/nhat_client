@@ -18,6 +18,7 @@ function DangNhap(props) {
 					if (response.data.success === 0) {
 						notify.notificatonWarning('Hãy kiểm tra lại email hoặc mật khẩu');
 					} else {
+						console.log('11')
 						notify.notificatonSuccess('Đăng nhập thành công');
 						setData((data) => ({
 							id: 0,

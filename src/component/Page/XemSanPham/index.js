@@ -44,20 +44,21 @@ function XemSanPham(props) {
   });
   var d = new Date();
   const [dataHot, setDataHot] = useState([]);
-  const gia = JSON.parse(localStorage.getItem("gia"));
-  const search = JSON.parse(localStorage.getItem("search"));
-  const idMauSac = JSON.parse(localStorage.getItem("idMauSac"));
+
   useEffect(() => {
     loadData();
   }, []);
   useEffect(() => {
     loadData();
   const search = JSON.parse(localStorage.getItem("search"));
-}, [gia, search, idMauSac]);
+}, []);
 
   async function loadData() {
+    const gia = JSON.parse(localStorage.getItem("gia"));
+    const search = JSON.parse(localStorage.getItem("search"));
+    const idMauSac = JSON.parse(localStorage.getItem("idMauSac"));
     await apiThongKew
-      .getHotByMonth({ year: d.getFullYear(), month: d.getMonth() })
+      .getHotByMonth({ year: d.getMonth()===0 ? d.getFullYear() -1:d.getFullYear(), month: d.getMonth() === 0 ? 12 : d.getMonth() })
       .then((res) => {
         if (res.status === 200) {
           setDataHot(res.data.data);
@@ -217,6 +218,7 @@ function XemSanPham(props) {
                 : 0;
           }
         }
+
         setDataSubmit((dataSubmit) => ({
           ...dataSubmit,
           id_giay: dataTLG[0].id,
@@ -236,7 +238,7 @@ function XemSanPham(props) {
 
     return () => (current = false);
   }, [dataTam, dataTamAll, dataKM]);
-console.log(dataHot)
+
   useEffect(() => {
     let current = true;
     if (dataTams.length > 0 && dataTamAlls.length > 0) {
@@ -288,8 +290,11 @@ console.log(dataHot)
         };
         dataTLG.push(g);
       });
-
+      if(dataHot && dataHot.length>0){
+        dataTLG.concat(dataHot);
+      }
       setDatas(dataTLG);
+      
       if (dataTLG.length > 0) {
         const d = dataTLG[0].mausac[0].hinh_anh.split(",");
         let stemp = null;
@@ -311,20 +316,8 @@ console.log(dataHot)
                 : 0;
           }
         }
-        setDataSubmit((dataSubmit) => ({
-          ...dataSubmit,
-          id_giay: dataTLG[0].id,
-          ten_giay: dataTLG[0].ten_giay,
-          gia_ban: dataTLG[0].mausac[0].size[0].gia_ban,
-          id_size: dataTLG[0].mausac[0].size[0].id_size,
-          ten_size: dataTLG[0].mausac[0].size[0].ten_size,
-          soluong_con: dataTLG[0].mausac[0].size[0].so_luong,
-          id_mau_sac: dataTLG[0].mausac[0].id_mau_sac,
-          ten_mau_sac: dataTLG[0].mausac[0].ten_mau_sac,
-          gia_ban_khuyen_mai: stemps ? stemps : 0,
-          soluong: 1,
-          hinh_anh: d[0],
-        }));
+
+        
       }
     }
 
@@ -472,7 +465,7 @@ console.log(dataHot)
       notify.notificatonWarning(`Hãy nhập số lượng bạn muốn mua`);
     }
   }
-  console.log(datas);
+
   if (mausac.length > 0) {
     return (
       <div className="xem_san_pham">
@@ -514,7 +507,7 @@ console.log(dataHot)
                   <div className="d-flex">
                     <div
                       className={
-                        data.gia_ban_khuyen_mai !== 0
+                        dataSubmit.gia_ban_khuyen_mai && dataSubmit.gia_ban_khuyen_mai !== 0
                           ? "select-fast__modify ml-2 amount"
                           : "select-fast__modify ml-2"
                       }
@@ -524,12 +517,13 @@ console.log(dataHot)
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
                       ₫
                     </div>
-                    <div className="select-fast__modify ml-2">
+                    {dataSubmit.gia_ban_khuyen_mai && dataSubmit.gia_ban_khuyen_mai !== 0 ? <div className="select-fast__modify ml-2">
                       {`${dataSubmit.gia_ban_khuyen_mai
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
                       ₫
-                    </div>
+                    </div>:''}
+                    
                   </div>
                 </div>
                 <div className="watch-product__price mt-3">
@@ -620,7 +614,6 @@ console.log(dataHot)
                   for (var i = 0; i < d.length; i++) {
                     arr.push(d[i]);
                   }
-                  console.log(item.gia_ban)
                   let stemps = 0;
                   stemps = item?.gia_ban_khuyen_mai
                     ? item?.gia_ban_khuyen_mai

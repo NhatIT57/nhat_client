@@ -16,8 +16,16 @@ function SelectSize(props) {
       }
     });
   }
+
   useEffect(() => {
-    setSize(dataSubmits.ten_size);
+    setSize(arrSize[0]?.ten_size);
+  }, []);
+
+  useEffect(() => {
+    const dataStemp = arrSize.filter(item => item?.ten_size === dataSubmits?.ten_size)
+    if(dataStemp?.length > 0){
+      setSize(dataSubmits.ten_size);
+    }
   }, [dataSubmits]);
   return (
     <div className="select-size mt-3">
