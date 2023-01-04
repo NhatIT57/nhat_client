@@ -157,7 +157,7 @@ input:checked+label .img-check {
 
 .owl-carousel .owl-item img {
     width: 100% !important;
-    object-fit: cover;
+    object-fit: contain;
     height: 100%;
 }
 
@@ -169,6 +169,6 @@ input:checked+label .img-check {
         width: 100px !important;
         height:  100px !important;
         padding: 0 5px !important;
-        object-fit: cover;
+        object-fit: contain;
     }
 }

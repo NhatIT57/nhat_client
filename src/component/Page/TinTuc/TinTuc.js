@@ -22,7 +22,7 @@ const TinTuc = (props) => {
     });
 
     await apiThongKew
-      .getHotByMonth({ year: d.getFullYear(), month: d.getMonth() })
+      .getHotByMonth({ year: d.getMonth()===0 ? d.getFullYear() -1:d.getFullYear(), month: d.getMonth() === 0 ? 12 : d.getMonth() })
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
@@ -64,8 +64,8 @@ const TinTuc = (props) => {
           </ul>
           <div className="clear10" />
         </div>
-        <div className="newsright">
-          <div className="titnews blue">Hàng bán chạy tháng {d.getMonth()}</div>
+        <div className="newsright mt-3">
+          <div className="titnews blue">Hàng bán chạy tháng {d.getMonth() === 0 ? 12:d.getMonth()}</div>
           <ul className="selling">
             {dataHot &&
               dataHot.map((item) => {
