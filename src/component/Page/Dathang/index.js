@@ -33,7 +33,6 @@ function DatHang(props) {
   const [isKM, setIsKM] = useState(false);
   async function submit() {
     if (valueRadio) {
-      data.thanh_toan = 0;
       await apiDH
         .Them(data)
         .then((response) => {
@@ -95,72 +94,10 @@ function DatHang(props) {
         .catch((error) => {
           console.log(error);
         });
-    } else {data.thanh_toan = 1;
-      await apiDH
-        .Them(data)
-        .then((responseDH) => {
-          if (responseDH.status === 200) {
-            var id = responseDH.data.data.insertId;
-            console.log(responseDH.data.data)
-            apiDH.notifyDat_hang({ id: responseDH.data.data.insertId });
-            notify.notificatonSuccess("Bạn đã đặt hàng thành công");
-            apiSend
-              .sendMail({
-                to: data.email,
-                subject: `Bạn về đặt một đơn hàng mã đơn hàng là: ${id}`,
-                body: `<div><div><p>Bấm vào link bên dưới để xem chi tiết đơn hàng: <a href=http://localhost:3000/XemDonHang/id=${id}>Link</a></p></div></div>`,
-              })
-              .then((responses) => {
-                if (responses.status === 200) {
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-            token.map((i, index) => {
-              var tam = dataSize;
-              apiCDH
-                .Them({
-                  id_giay: i.id_giay,
-                  id_dat_hang: id,
-                  so_luong: i.soluong,
-                  tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
-                  id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
-                })
-                .then((response) => {
-                  if (response.status === 200) {
-                    var sl =
-                      parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
-                    apiCTS
-                      .update({
-                        id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
-                        id_size: dataSize[index].id_size,
-                        so_luong: sl,
-                      })
-                      .then((response) => {
-                        if (response.status === 200) {
-                          localStorage.removeItem("product");
-                          // setterToken([]);
-                          history.push("/");
-                          window.open(`http://localhost/php/PayMoMo/init_payment.php?amount=${parseInt(i.soluong) * parseInt(i.gia_ban)}&orderId=${responseDH.data.data.insertId}`);
-                          
-                        }
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
-                  }
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      
+    } else {
+      apiDH.getThanhToan(data).then((rsp) => {
+        window.location.href = `http://localhost:8888/order/create_payment_url`;
+      });
     }
   }
 

@@ -4,7 +4,7 @@ const token = JSON.parse(localStorage.getItem("token"));
 var url_upload = "api/upload";
 var URL = "http://localhost:8080";
 var URLS = "http://localhost:8080";
-var URL_THANHTOAN = "http://localhost:8080";
+var URL_THANHTOAN = "http://localhost:8888";
 var url_them_dat_hang = "api/dat_hang";
 // var url_get_loia_giay = ''
 const authAxios = axios.create({
@@ -46,7 +46,6 @@ export const upload = (file) => {
 };
 
 export const Them = (data) => {
-    console.log(data);
     return authAxios.post(`/api/dat_hang`, data);
 };
 
@@ -56,7 +55,7 @@ export const getList = () => {
 
 
 export const getThanhToan = (data) => {
-    return authAxios.post(`/create_payment_url`, data);
+    return authAxiosTT.get(`/order/create_payment_url`, data);
 };
 
 
