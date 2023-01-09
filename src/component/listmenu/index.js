@@ -118,6 +118,8 @@ function DashBoard(props) {
         return "vans.png";
       case "MLB":
         return "mlb.png";
+      case "Alexander McQueen":
+        return "McQueen.png";
       default:
         return "nike.png";
     }
@@ -130,7 +132,7 @@ function DashBoard(props) {
         return (
           <li key={route.id} className="nav-item">
             <Link key={route.id} to={`/ThuongHieu=${route.id}`}>
-            <div className="img-menu">
+            <div className={route.ten_loai_giay ===  'Alexander McQueen'? "img-menu img-menuMcQueen" : "img-menu"}>
               <img
                 src={`http://localhost:8080/images/${valueImage(
                   route.ten_loai_giay
