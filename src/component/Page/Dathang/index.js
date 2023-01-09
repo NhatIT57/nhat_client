@@ -33,6 +33,7 @@ function DatHang(props) {
   const [isKM, setIsKM] = useState(false);
   async function submit() {
     if (valueRadio) {
+      data.thanh_toan = 0;
       await apiDH
         .Them(data)
         .then((response) => {
@@ -75,9 +76,9 @@ function DatHang(props) {
                       })
                       .then((response) => {
                         if (response.status === 200) {
-                          localStorage.removeItem("product");
+                          // localStorage.removeItem("product");
                           // setterToken([]);
-                          history.push("/");
+                          // history.push("/");
                         }
                       })
                       .catch((error) => {
@@ -95,9 +96,69 @@ function DatHang(props) {
           console.log(error);
         });
     } else {
-      apiDH.getThanhToan(data).then((rsp) => {
-        window.location.href = `http://localhost:8888/order/create_payment_url`;
-      });
+      data.thanh_toan = 1;
+      await apiDH
+        .Them(data)
+        .then((responseDH) => {
+          if (responseDH.status === 200) {
+            var id = responseDH.data.data.insertId;
+            apiDH.notifyDat_hang({ id: responseDH.data.data.insertId });
+            notify.notificatonSuccess("Bạn đã đặt hàng thành công");
+            apiSend
+              .sendMail({
+                to: data.email,
+                subject: `Bạn về đặt một đơn hàng mã đơn hàng là: ${id}`,
+                body: `<div><div><p>Bấm vào link bên dưới để xem chi tiết đơn hàng: <a href=http://localhost:3000/XemDonHang/id=${id}>Link</a></p></div></div>`,
+              })
+              .then((response) => {
+                if (response.status === 200) {
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            token.map((i, index) => {
+              var tam = dataSize;
+              apiCDH
+                .Them({
+                  id_giay: i.id_giay,
+                  id_dat_hang: id,
+                  so_luong: i.soluong,
+                  tong_tien: parseInt(i.soluong) * parseInt(i.gia_ban),
+                  id_chi_tiet_mau_sac: dataSize[index].id_ct_mau_sac,
+                })
+                .then((response) => {
+                  if (response.status === 200) {
+                    var sl =
+                      parseInt(dataSize[index].so_luong) - parseInt(i.soluong);
+                    apiCTS
+                      .update({
+                        id_ct_mau_sac: dataSize[index].id_ct_mau_sac,
+                        id_size: dataSize[index].id_size,
+                        so_luong: sl,
+                      })
+                      .then((response) => {
+                        if (response.status === 200) {
+                          localStorage.removeItem("product");
+                          // setterToken([]);
+                          history.push("/");
+                          window.open(`http://localhost/php/PayMoMo/init_payment.php?amount=${parseInt(i.soluong) * parseInt(i.gia_ban)}&orderId=${responseDH.data.data.insertId}`);
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
 
@@ -114,7 +175,7 @@ function DatHang(props) {
       await setData((data) => ({
         ...data,
         ship: stempData[0].ship,
-        tong_tien: tong - stempData[0].ship,
+        tong_tien: tong + stempData[0].ship,
       }));
     }
     await setErrors(validate(stemp));
@@ -257,14 +318,14 @@ function DatHang(props) {
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Đơn giá:</div>
                         {isKM && i.gia_ban_khuyen_mai !== 0 ? (
-                              <div className="modal-price">{`${i.gia_ban_khuyen_mai
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
-                            ) : (
-                              <div className="modal-price">{`${i.gia_ban
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
-                            )}
+                          <div className="modal-price">{`${i.gia_ban_khuyen_mai
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
+                        ) : (
+                          <div className="modal-price">{`${i.gia_ban
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`}</div>
+                        )}
                       </div>
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Số lượng:</div>
@@ -273,24 +334,24 @@ function DatHang(props) {
                       <div className="col-md-2 col-xs-12 flex-modle__title">
                         <div className="title_block">Thành tiền:</div>
                         <div className="modal-priceAll">
-                        {isKM && i.gia_ban_khuyen_mai !== 0 ? (
-                              <div className="modal-priceAll">
-                                {(
-                                  parseInt(i.soluong) *
-                                  parseInt(i.gia_ban_khuyen_mai)
-                                )
-                                  .toString()
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                ₫
-                              </div>
-                            ) : (
-                              <div className="modal-priceAll">
-                                {(parseInt(i.soluong) * parseInt(i.gia_ban))
-                                  .toString()
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                                ₫
-                              </div>
-                            )}
+                          {isKM && i.gia_ban_khuyen_mai !== 0 ? (
+                            <div className="modal-priceAll">
+                              {(
+                                parseInt(i.soluong) *
+                                parseInt(i.gia_ban_khuyen_mai)
+                              )
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                              ₫
+                            </div>
+                          ) : (
+                            <div className="modal-priceAll">
+                              {(parseInt(i.soluong) * parseInt(i.gia_ban))
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                              ₫
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -334,7 +395,7 @@ function DatHang(props) {
                     onChange={(e) => handleChange(e, false)}
                     checked={valueRadio === false ? true : false}
                   />
-                  Thanh toán VNPAY
+                  Thanh toán MOMO
                 </div>
               </div>
             </div>

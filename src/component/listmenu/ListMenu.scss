@@ -243,6 +243,17 @@ position: fixed;
     margin: 0 unset;
 }
 
+.img-menuMcQueen{
+    padding: 0px;
+    padding-top: 4px;
+}
+
+.logoMcQueen{
+    font-size: 18px;
+    padding-bottom: 2px;
+    text-transform: uppercase;
+}
+
 @media screen and (min-width: 1px)and(max-width: 739px) {
     .nav {
         display: none;

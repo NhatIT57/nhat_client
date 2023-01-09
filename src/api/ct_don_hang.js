@@ -29,3 +29,7 @@ export const update = (data) => {
 export const deleteDH = (data) => {
     return authAxios.post(`/api/chi_tiet_don_hang/delete`, data);
 };
+
+export const getByidKH = (id) => {
+    return authAxios.get(`/api/chi_tiet_don_hang/${id}`);
+};

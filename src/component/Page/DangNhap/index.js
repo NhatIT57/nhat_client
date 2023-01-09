@@ -41,6 +41,7 @@ function DangNhap(props) {
 			});
 	}
 	const responseFacebook = (response) => {
+		console.log(response)
 		localStorage.removeItem('product');
 		api.getFBID({ facebook_id: response.id })
 			.then((responses) => {
@@ -116,7 +117,7 @@ function DangNhap(props) {
 						<div className="login-fb">
 							<FacebookLogin
 								className="mr-t"
-								appId="2723848277761134"
+								appId="237511188411732"
 								autoLoad={false}
 								fields="name,email,picture"
 								callback={responseFacebook}

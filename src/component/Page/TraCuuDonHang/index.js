@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import "./index.scss";
 import Pagination from "react-js-pagination";
 import * as apiDatHang from "./../../../api/dat_hang";
 
+
 function TraCuuDonHang(props) {
   const [valueRadio, setValueRadio] = useState("sdt");
   const [valueData, setValueData] = useState("");
   const [valueDataEmail, setValueDataEmail] = useState("");
-
   const [allPage, setAllPage] = useState(3);
   const [data, setData] = useState([]);
   const [offset, setOffset] = useState(0);
   const [activePage, setActivePage] = useState(1);
+
 
   //   useEffect(() => {
   //     if (valueRadio === "email") {
@@ -120,8 +121,14 @@ function TraCuuDonHang(props) {
     }
   }
 
+
   return (
     <div className="TraCuuDonHang mt-4">
+      <div
+        className="modal show"
+        style={{ display: "block", position: "initial" }}
+      >
+      </div>
       <Container>
         <div className="row d-flex justify-content-between">
           <div className="col-sm-12 col-lg-5 form-tracuu">

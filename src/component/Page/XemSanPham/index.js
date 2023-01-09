@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as giayAPI from "./../../../api/giay";
 import * as apiKM from "./../../../api/khuyen_mai";
 import * as apiThongKew from "./../../../api/thong_ke";
-
+import * as apiCDH from "./../../../api/ct_don_hang";
 import "./index.scss";
 import SelectSize from "./select_Size/index";
 import SelectFast from "./select_Fast/index";
@@ -17,7 +17,10 @@ import * as ActionModal from "./../../../actions/modal";
 import { useHistory } from "react-router-dom";
 import jwt from "jsonwebtoken";
 import * as notify from "../../../contants/notifycation";
+import * as apiDanhGia from "../../../api/chi_tiet_danh_gia";
 import Moment from "moment";
+import StarRatings from "react-star-ratings";
+import { Button, Modal } from "react-bootstrap";
 
 function XemSanPham(props) {
   const { CreateModal } = props;
@@ -29,6 +32,10 @@ function XemSanPham(props) {
   const [dataTamAll, setDataTamAll] = useState([]);
   const [dataTams, setDataTams] = useState([]);
   const [dataTamAlls, setDataTamAlls] = useState([]);
+  const [danhGia, setdanhGia] = useState(5);
+  const [show, setShow] = useState(false);
+  const [giay, setGiay] = useState('');
+  const [danhGias, setdanhGias] = useState(0);
   const [dataSubmit, setDataSubmit] = useState({
     id_giay: "",
     ten_giay: "",
@@ -50,15 +57,27 @@ function XemSanPham(props) {
   }, []);
   useEffect(() => {
     loadData();
-  const search = JSON.parse(localStorage.getItem("search"));
-}, []);
+    loadDanhGIa()
+    const search = JSON.parse(localStorage.getItem("search"));
+  }, []);
 
+
+  async function loadDanhGIa(){
+    await apiDanhGia.getDanhGia(props.match.params.th).then((res) => {
+      if(res?.data?.data[0]?.danh_gia){
+          setdanhGia(res?.data?.data[0]?.danh_gia)
+      }
+    });
+  }
   async function loadData() {
     const gia = JSON.parse(localStorage.getItem("gia"));
     const search = JSON.parse(localStorage.getItem("search"));
     const idMauSac = JSON.parse(localStorage.getItem("idMauSac"));
     await apiThongKew
-      .getHotByMonth({ year: d.getMonth()===0 ? d.getFullYear() -1:d.getFullYear(), month: d.getMonth() === 0 ? 12 : d.getMonth() })
+      .getHotByMonth({
+        year: d.getMonth() === 0 ? d.getFullYear() - 1 : d.getFullYear(),
+        month: d.getMonth() === 0 ? 12 : d.getMonth(),
+      })
       .then((res) => {
         if (res.status === 200) {
           setDataHot(res.data.data);
@@ -290,11 +309,11 @@ function XemSanPham(props) {
         };
         dataTLG.push(g);
       });
-      if(dataHot && dataHot.length>0){
+      if (dataHot && dataHot.length > 0) {
         dataTLG.concat(dataHot);
       }
       setDatas(dataTLG);
-      
+
       if (dataTLG.length > 0) {
         const d = dataTLG[0].mausac[0].hinh_anh.split(",");
         let stemp = null;
@@ -316,14 +335,14 @@ function XemSanPham(props) {
                 : 0;
           }
         }
-
-        
       }
+    }else{
+      setDatas()
     }
 
     return () => (current = false);
   }, [dataTams, dataTamAlls, dataKM]);
-
+  console.log(dataHot)
   function handleSubmit(e) {
     e.preventDefault();
   }
@@ -466,9 +485,72 @@ function XemSanPham(props) {
     }
   }
 
+  const handleClose = () => setShow(false);
+  const handleShow = async() => {
+    const tokenss = localStorage.getItem("tokenTC");
+        if (tokenss) {
+          try {
+            var decoded = jwt.verify(tokenss, "qwe1234");
+            if (decoded.result) {
+               await apiCDH.getByidKH(decoded.result.id).then((res)=>{
+                if(res?.data?.data?.length>0){
+                    setShow(true);
+                  }else{
+                    notify.notificatonWarning(`Bạn phải mua ít nhất một sản phẩm`);
+                  }
+               })
+            }
+          } catch (err) {
+            // err
+          }
+          //qwe1234
+        } else {
+          history.push('/DangNhap')
+        }
+  };
+  const handleDanhGIa = async(e)=>{
+    var id = 0;
+    if(e===1){
+      id = 4 
+    }
+    if(e===2){
+      id = 14
+    }
+    if(e===3){
+      id = 24
+    }
+    if(e===4){
+      id = 34
+    }
+    if(e===5){
+      id = 44
+    }
+    await apiDanhGia.Them({id_giay: props.match.params.th, id_danh_gia: id, date_create: Moment(new Date()).format("YYYY-MM-DD HH:mm")}).then((res)=>{
+      if(res?.data?.success === 1){
+        console.log(res?.success)
+        setShow(false);
+        loadDanhGIa()
+      }
+      setShow(false);
+    })
+  }
   if (mausac.length > 0) {
     return (
       <div className="xem_san_pham">
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Đánh giá</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <StarRatings
+              rating={danhGias}
+              starRatedColor="#e77e24"
+              numberOfStars={5}
+              changeRating={(e) => handleDanhGIa(e)}
+              name="rating"
+            />
+          </Modal.Body>
+        </Modal>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-sm-6 col-lg-6 col-md-6">
@@ -502,12 +584,23 @@ function XemSanPham(props) {
                 <div className="watch-product__name">
                   CAPTOE BROGUES OXFORD - LIMITED EDITION - OF21
                 </div>
+                <div className="mt-2 d-flex">
+                <div className="mr-1"><StarRatings
+                  rating={danhGia}
+                  starRatedColor="#e77e24"
+                  numberOfStars={5}
+                  name="rating"
+                /></div>
+                <Button onClick={() => handleShow()}>Đánh giá</Button>
+              </div>
+                
                 <div className="watch-product__price mt-3">
                   <div className="select-fast__modify">Giá bán:</div>
                   <div className="d-flex">
                     <div
                       className={
-                        dataSubmit.gia_ban_khuyen_mai && dataSubmit.gia_ban_khuyen_mai !== 0
+                        dataSubmit.gia_ban_khuyen_mai &&
+                        dataSubmit.gia_ban_khuyen_mai !== 0
                           ? "select-fast__modify ml-2 amount"
                           : "select-fast__modify ml-2"
                       }
@@ -517,13 +610,17 @@ function XemSanPham(props) {
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
                       ₫
                     </div>
-                    {dataSubmit.gia_ban_khuyen_mai && dataSubmit.gia_ban_khuyen_mai !== 0 ? <div className="select-fast__modify ml-2">
-                      {`${dataSubmit.gia_ban_khuyen_mai
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
-                      ₫
-                    </div>:''}
-                    
+                    {dataSubmit.gia_ban_khuyen_mai &&
+                    dataSubmit.gia_ban_khuyen_mai !== 0 ? (
+                      <div className="select-fast__modify ml-2">
+                        {`${dataSubmit.gia_ban_khuyen_mai
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
+                        ₫
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
                 <div className="watch-product__price mt-3">
@@ -606,7 +703,7 @@ function XemSanPham(props) {
               </Link>
             </div>
             <OwlCarousel items={4} className="owl-theme" loop nav margin={8}>
-              {datas.length > 0 ? (
+              {datas?.length > 0 ? (
                 datas.map((item, index) => {
                   const data = item.mausac;
                   const d = data[0].hinh_anh.split(",");
@@ -620,7 +717,7 @@ function XemSanPham(props) {
                     : 0;
                   return (
                     <Link
-                      key={item.id +'ss'}
+                      key={item.id + "ss"}
                       to={`/XemSamPham/${item.id}`}
                       className="title-hp"
                     >
@@ -668,7 +765,7 @@ function XemSanPham(props) {
       </div>
     );
   } else {
-    return <div></div>;
+    return <div className="xem_san_pham"></div>;
   }
 }
 

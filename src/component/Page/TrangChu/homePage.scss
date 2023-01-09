@@ -159,7 +159,7 @@
     // width: 224.66px !important;
     // height:  224.66px !important;
     padding: 0 35px !important;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .quangcao .owl-carousel .owl-item img {
@@ -185,6 +185,9 @@
     width: 100%;
     object-fit: fill;
 }
+.homePage, .ThuongHieuTC_css{
+    min-height: 800px;
+}
 
 .homePage .quangcao{
     width: 100% !important;
@@ -200,7 +203,7 @@
         width: 100px !important;
         height:  100px !important;
         padding: 0 5px !important;
-        object-fit: cover;
+        object-fit: contain;
     }
     .homePage .quangcao .owl-carousel .owl-item img {
         padding: 0 0 !important;

@@ -132,12 +132,12 @@ function DashBoard(props) {
         return (
           <li key={route.id} className="nav-item">
             <Link key={route.id} to={`/ThuongHieu=${route.id}`}>
-            <div className={route.ten_loai_giay ===  'Alexander McQueen'? "img-menu img-menuMcQueen" : "img-menu"}>
-              <img
+            <div className={(route.ten_loai_giay ===  'Alexander McQueen' || route.ten_loai_giay ===  'Balenciaga' || route.ten_loai_giay ===  'Supreme')? "img-menu img-menuMcQueen" : "img-menu"}>
+             {route.ten_loai_giay === 'Alexander McQueen'?<div className="logoMcQueen">McQueen</div>:route.ten_loai_giay === 'Supreme'?<div className="logoMcQueen">Supreme</div>:route.ten_loai_giay === 'Balenciaga'?<div className="logoMcQueen">Balenciaga</div>: <img
                 src={`http://localhost:8080/images/${valueImage(
                   route.ten_loai_giay
                 )}`}
-              ></img>
+              ></img>}
             </div>
               {route.ten_loai_giay}
             </Link>
