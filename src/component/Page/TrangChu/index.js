@@ -436,8 +436,8 @@ function TrangChu(props) {
     } else {
       return (
         <div className="homePage">
-           <div className="quangcaos"> 
-           <OwlCarousel autoplay items={1} className="owl-theme quangcaos" loop nav>
+           <div className="quangcao"> 
+           <OwlCarousel autoplay items={1} className="owl-theme quangcao" loop nav>
               {dataQuanCao && dataQuanCao.map((item)=>{
                 return  <div key={item.id} className="img-banner">
                 <img src={`http://localhost:8080/images/${item.hinh_anh}`}></img>

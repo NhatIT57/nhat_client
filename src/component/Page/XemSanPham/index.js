@@ -24,7 +24,7 @@ function XemSanPham(props) {
 
   const history = useHistory();
   const [data, setData] = useState({});
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState({});
   const [dataTam, setDataTam] = useState([]);
   const [dataTamAll, setDataTamAll] = useState([]);
   const [dataTams, setDataTams] = useState([]);
@@ -57,6 +57,14 @@ function XemSanPham(props) {
     const gia = JSON.parse(localStorage.getItem("gia"));
     const search = JSON.parse(localStorage.getItem("search"));
     const idMauSac = JSON.parse(localStorage.getItem("idMauSac"));
+    await apiThongKew
+      .getHotByMonth({ year: d.getMonth()===0 ? d.getFullYear() -1:d.getFullYear(), month: d.getMonth() === 0 ? 12 : d.getMonth() })
+      .then((res) => {
+        if (res.status === 200) {
+          setDataHot(res.data.data);
+        }
+      });
+
     let pageN = 0;
     await giayAPI
       .getProductsPageByLG({
@@ -282,16 +290,10 @@ function XemSanPham(props) {
         };
         dataTLG.push(g);
       });
-     apiThongKew
-      .getHotByMonth({ year: d.getMonth()===0 ? d.getFullYear() -1:d.getFullYear(), month: d.getMonth() === 0 ? 12 : d.getMonth() })
-      .then((res) => {
-        if (res.status === 200) {
-          if(res.data.data){
-            dataTLG = dataTLG.concat(res.data.data);
-          }
-        }
-        setDatas(dataTLG);
-      });
+      if(dataHot && dataHot.length>0){
+        dataTLG.concat(dataHot);
+      }
+      setDatas(dataTLG);
       
       if (dataTLG.length > 0) {
         const d = dataTLG[0].mausac[0].hinh_anh.split(",");
@@ -607,7 +609,7 @@ function XemSanPham(props) {
               {datas.length > 0 ? (
                 datas.map((item, index) => {
                   const data = item.mausac;
-                  const d = data ? data[0].hinh_anh.split(",") : item?.hinh_anh.split(",");
+                  const d = data[0].hinh_anh.split(",");
                   let arr = [];
                   for (var i = 0; i < d.length; i++) {
                     arr.push(d[i]);

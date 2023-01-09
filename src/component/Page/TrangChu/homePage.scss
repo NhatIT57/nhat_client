@@ -159,10 +159,10 @@
     // width: 224.66px !important;
     // height:  224.66px !important;
     padding: 0 35px !important;
-    object-fit: contain;
+    object-fit: cover;
 }
 
-.quangcaos .owl-carousel .owl-item img {
+.quangcao .owl-carousel .owl-item img {
     padding: 0 0 !important;
 }
 
@@ -186,7 +186,7 @@
     object-fit: fill;
 }
 
-.homePage .quangcaos{
+.homePage .quangcao{
     width: 100% !important;
 }
 
@@ -200,15 +200,15 @@
         width: 100px !important;
         height:  100px !important;
         padding: 0 5px !important;
-        object-fit: contain;
+        object-fit: cover;
     }
-    .homePage .quangcaos .owl-carousel .owl-item img {
+    .homePage .quangcao .owl-carousel .owl-item img {
         padding: 0 0 !important;
     }
     .owl-carousel .owl-item .img-banner  img{
         height: 100% !important;
         width: 100% !important;
-        object-fit: contain;
+        object-fit: fill;
     }
     
     

@@ -1,6 +1,6 @@
-import { Store } from 'react-notifications-component';
+import { store } from 'react-notifications-component';
 export const notificatonSuccess = function notificatonSuccess(title) {
-    return Store.addNotification({
+    return store.addNotification({
         title: 'Thông báo',
         message: title,
         type: 'success', // 'default', 'success', 'info', 'warning'
@@ -14,7 +14,7 @@ export const notificatonSuccess = function notificatonSuccess(title) {
 };
 
 export const notificatonWarning = function notificatonWarning(title) {
-    return Store.addNotification({
+    return store.addNotification({
         title: 'Thông báo',
         message: title,
         type: 'warning', // 'default', 'success', 'info', 'warning'
